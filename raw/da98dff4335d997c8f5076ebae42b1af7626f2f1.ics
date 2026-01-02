@@ -1,0 +1,632 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//sebbo.net//ical-generator//EN
+NAME:UT Schedule (WebCal)
+X-WR-CALNAME:UT Schedule (WebCal)
+TIMEZONE-ID:Asia/Ho_Chi_Minh
+X-WR-TIMEZONE:Asia/Ho_Chi_Minh
+BEGIN:VEVENT
+UID:be23b374-ff6c-442f-b5e1-7f209f93a561
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260102T064500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260102T091500
+SUMMARY:Quản trị học
+LOCATION:courses.ut.edu.vn - Online
+DESCRIPTION:LMS: https://courses.ut.edu.vn/course/view.php?idnumber=740101
+ 08010236&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOj
+ E3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMr
+ nmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101080
+ 10236&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:f1c22d47-23ae-45a0-ae2e-c2beab02400d
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260102T121000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260102T144000
+SUMMARY:Thể dục thể hình căn bản - Fitness 1
+LOCATION:GYM - Cơ sở 3 - Cơ sở 3
+DESCRIPTION:Ghi chú: Lịch học bù cho ngày 02/02/2026\nLMS: https://
+ courses.ut.edu.vn/course/view.php?idnumber=74010100412519&token=eyJhbGciOi
+ JIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMzQsImV4cCI6MTc
+ 2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101004
+ 12519&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:db6a743e-d799-40e6-8ac2-4e24bedcbdae
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260102T145000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260102T172000
+SUMMARY:Toán kỹ thuật
+LOCATION:ONLINE - Online
+DESCRIPTION:Ghi chú: Lịch học bù cho ngày 30/12/2025\nLMS: https://
+ courses.ut.edu.vn/course/view.php?idnumber=74010109508308&token=eyJhbGciOi
+ JIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMzQsImV4cCI6MTc
+ 2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101095
+ 08308&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:098a60fa-684f-4c8d-8eae-aac5539ef726
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260102T210000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260102T224000
+SUMMARY:General English 2
+LOCATION:E-Learning - Online
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:5e8a4720-4383-470b-aab7-066e468522da
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260103T082500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260103T101500
+SUMMARY:General English 2
+LOCATION:thnn.ut.edu.vn - Online
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:b4375819-9b54-4a1c-9246-5851efbf7e35
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260103T201000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260103T224000
+SUMMARY:Quản trị học
+LOCATION:E-Learning - Online
+DESCRIPTION:LMS: https://courses.ut.edu.vn/course/view.php?idnumber=740101
+ 08010236&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOj
+ E3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMr
+ nmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101080
+ 10236&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:bf87d56d-2e95-4ed0-8598-6804a4dc09fe
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260104T082500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260104T101500
+SUMMARY:General English 2
+LOCATION:thnn.ut.edu.vn - Online
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:d91d7bf4-cb8c-4983-8937-ea4c1207f7dd
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260105T064500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260105T091500
+SUMMARY:Thể dục thể hình căn bản - Fitness 1
+LOCATION:GYM - Cơ sở 3 - Cơ sở 3
+DESCRIPTION:LMS: https://courses.ut.edu.vn/course/view.php?idnumber=740101
+ 00412519&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOj
+ E3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMr
+ nmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101004
+ 12519&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:321ba776-5fa3-4ca6-85e4-59d7686ea3c4
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260105T210000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260105T224000
+SUMMARY:General English 2
+LOCATION:E-Learning - Online
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:815ceac9-02e9-419a-9b11-077292a78519
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260106T082500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260106T101500
+SUMMARY:General English 2
+LOCATION:I005 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:94133eda-9d6b-432f-9057-02c8368c394c
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260106T121000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260106T144000
+SUMMARY:Phương pháp nghiên cứu
+LOCATION:H207 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://courses.ut.edu.vn/course/view.php?idnumber=740101
+ 08010111&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOj
+ E3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMr
+ nmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101080
+ 10111&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:7f1880ad-ca44-4563-b7f3-2a7078c6cead
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260107T201000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260107T224000
+SUMMARY:Phương pháp nghiên cứu
+LOCATION:E-Learning - Online
+DESCRIPTION:LMS: https://courses.ut.edu.vn/course/view.php?idnumber=740101
+ 08010111&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOj
+ E3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMr
+ nmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101080
+ 10111&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:d16b6d0e-829e-4250-8b9b-5626bf646320
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260107T210000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260107T224000
+SUMMARY:General English 2
+LOCATION:E-Learning - Online
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:ee237621-af9c-47dc-9a04-ec72f245cea8
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260108T082500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260108T101500
+SUMMARY:General English 2
+LOCATION:I005 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:ccf2c614-4b15-45b8-bf92-44312f49ea07
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260108T121000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260108T144000
+SUMMARY:Toán kỹ thuật
+LOCATION:H004 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://courses.ut.edu.vn/course/view.php?idnumber=740101
+ 09508308&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOj
+ E3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMr
+ nmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101095
+ 08308&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:2b258c1a-9519-41c9-a949-9d7fad791c74
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260109T064500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260109T091500
+SUMMARY:Quản trị học
+LOCATION:H303 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://courses.ut.edu.vn/course/view.php?idnumber=740101
+ 08010236&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOj
+ E3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMr
+ nmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101080
+ 10236&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:a99e9104-ec16-45d4-8f6f-1bdbc22709b9
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260109T210000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260109T224000
+SUMMARY:General English 2
+LOCATION:E-Learning - Online
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:7ba10133-8ece-4d93-94c4-cce287498e4e
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260110T082500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260110T101500
+SUMMARY:General English 2
+LOCATION:I005 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:19c21792-3798-459e-9be0-d2e5796a5230
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260110T201000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260110T224000
+SUMMARY:Quản trị học
+LOCATION:E-Learning - Online
+DESCRIPTION:LMS: https://courses.ut.edu.vn/course/view.php?idnumber=740101
+ 08010236&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOj
+ E3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMr
+ nmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101080
+ 10236&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:c4334d58-45d4-42fe-8f30-7372c25d00b8
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260111T064500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260111T082500
+SUMMARY:General English 2
+LOCATION:I001 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:Ghi chú: Lịch học bù cho ngày 21/12/2025\nLMS: https://
+ thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&token=eyJhbGciOiJIUzI1NiJ
+ 9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIz
+ NH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:3c4d62da-c006-4d21-8ccd-ec0a01e337a6
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260112T064500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260112T091500
+SUMMARY:Thể dục thể hình căn bản - Fitness 1
+LOCATION:GYM - Cơ sở 3 - Cơ sở 3
+DESCRIPTION:LMS: https://courses.ut.edu.vn/course/view.php?idnumber=740101
+ 00412519&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOj
+ E3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMr
+ nmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101004
+ 12519&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:83fba692-5446-4bfc-b12b-a89c5bbc2d8f
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260112T210000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260112T224000
+SUMMARY:General English 2
+LOCATION:E-Learning - Online
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:0b9ef727-9691-43e5-9c65-7c0b42aff0cd
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260113T082500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260113T101500
+SUMMARY:General English 2
+LOCATION:I005 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:1b631cee-119d-4265-921c-0b04b4f6fb5d
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260113T121000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260113T144000
+SUMMARY:Phương pháp nghiên cứu
+LOCATION:H207 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://courses.ut.edu.vn/course/view.php?idnumber=740101
+ 08010111&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOj
+ E3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMr
+ nmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101080
+ 10111&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:cdae6862-c5d5-463d-8a49-f4e51ad8cda6
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260114T201000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260114T224000
+SUMMARY:Phương pháp nghiên cứu
+LOCATION:E-Learning - Online
+DESCRIPTION:LMS: https://courses.ut.edu.vn/course/view.php?idnumber=740101
+ 08010111&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOj
+ E3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMr
+ nmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101080
+ 10111&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:df2e8f80-2ef9-4cdc-91b1-ca5c18d63d09
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260114T210000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260114T224000
+SUMMARY:General English 2
+LOCATION:E-Learning - Online
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:4215c70f-7505-4cf2-b6dc-fef1d05fa44f
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260115T082500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260115T101500
+SUMMARY:General English 2
+LOCATION:I005 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:bff5286a-8e97-4a50-8843-7fdc380c5241
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260115T121000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260115T144000
+SUMMARY:Toán kỹ thuật
+LOCATION:H004 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://courses.ut.edu.vn/course/view.php?idnumber=740101
+ 09508308&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOj
+ E3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMr
+ nmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101095
+ 08308&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:c8c257dd-b5a2-4270-94ca-cbcbb3ae448f
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260116T064500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260116T091500
+SUMMARY:Quản trị học
+LOCATION:H303 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://courses.ut.edu.vn/course/view.php?idnumber=740101
+ 08010236&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOj
+ E3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMr
+ nmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101080
+ 10236&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:bbb1993c-359c-4ce5-aca1-bf689b4fad8d
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260116T210000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260116T224000
+SUMMARY:General English 2
+LOCATION:E-Learning - Online
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:c08e5694-cb3e-4094-b54c-0dc47b6ea4ee
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260117T082500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260117T101500
+SUMMARY:General English 2
+LOCATION:I005 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:d51b806a-1ab4-4ab9-8e8f-96eb7ae335e8
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260119T064500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260119T091500
+SUMMARY:Thể dục thể hình căn bản - Fitness 1
+LOCATION:GYM - Cơ sở 3 - Cơ sở 3
+DESCRIPTION:LMS: https://courses.ut.edu.vn/course/view.php?idnumber=740101
+ 00412519&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOj
+ E3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMr
+ nmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101004
+ 12519&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:2cdf4f71-0f41-4932-b7c6-9d3f4a86aaf2
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260120T082500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260120T101500
+SUMMARY:General English 2
+LOCATION:I005 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:565797cf-cd8b-4c9c-870e-268a2493aa50
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260120T121000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260120T144000
+SUMMARY:Phương pháp nghiên cứu
+LOCATION:H207 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://courses.ut.edu.vn/course/view.php?idnumber=740101
+ 08010111&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOj
+ E3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMr
+ nmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101080
+ 10111&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:8bace643-04a5-46de-a5cc-07cfe6c937a9
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260122T082500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260122T101500
+SUMMARY:General English 2
+LOCATION:I005 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:970fb589-b881-4f79-af52-9a3e5ce39953
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260123T064500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260123T091500
+SUMMARY:Quản trị học
+LOCATION:H303 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://courses.ut.edu.vn/course/view.php?idnumber=740101
+ 08010236&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOj
+ E3NjczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMr
+ nmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101080
+ 10236&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:dcd37fe5-1bde-4cc2-ac1f-280d55842964
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260123T121000
+DTEND;TZID=Asia/Ho_Chi_Minh:20260123T144000
+SUMMARY:Thể dục thể hình căn bản - Fitness 1
+LOCATION:GYM - Cơ sở 3 - Cơ sở 3
+DESCRIPTION:Ghi chú: Lịch học bù cho ngày 26/01/2026\nLMS: https://
+ courses.ut.edu.vn/course/view.php?idnumber=74010100412519&token=eyJhbGciOi
+ JIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMzQsImV4cCI6MTc
+ 2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://courses.ut.edu.vn/course/view.php?idnumber=740101004
+ 12519&token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3N
+ jczNDgyMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmL
+ hIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:b20fcc4c-e047-4eaf-b456-16225592f0ae
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260124T082500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260124T101500
+SUMMARY:General English 2
+LOCATION:I005 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+BEGIN:VEVENT
+UID:f51906c1-0e91-4bb6-8f0b-1b90ee22e520
+SEQUENCE:0
+DTSTAMP:20260102T100729
+DTSTART;TZID=Asia/Ho_Chi_Minh:20260125T082500
+DTEND;TZID=Asia/Ho_Chi_Minh:20260125T101500
+SUMMARY:General English 2
+LOCATION:I101 - CS3 (P.Trung Mỹ Tây\, TP.HCM) - Cơ sở 3
+DESCRIPTION:LMS: https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&
+ token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDg
+ yMzQsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+URL;VALUE=URI:https://thnn.ut.edu.vn/course/view.php?idnumber=74DT0248&tok
+ en=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwNjAyMDcwMDgxMzUiLCJpYXQiOjE3NjczNDgyMz
+ QsImV4cCI6MTc2OTk0MDIzNH0.WbEMLUjoHxCsLNjaILH_lhRzlKg_0z88nDMrnmLhIM0
+END:VEVENT
+END:VCALENDAR
