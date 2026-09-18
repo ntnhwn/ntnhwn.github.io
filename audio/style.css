@@ -1,0 +1,1267 @@
+:root {
+    --bg: #0b0d12;
+    --bg-soft: #11141b;
+    --card: #151922;
+    --card-hover: #1b202b;
+
+    --text: #f5f7fb;
+    --text-soft: #a7afbf;
+    --text-muted: #737d90;
+
+    --border: rgba(255, 255, 255, 0.08);
+
+    --accent: #7c5cff;
+    --accent-light: #9a82ff;
+
+    --danger: #ff5f6d;
+
+    --radius: 18px;
+
+    --shadow:
+        0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at 10% 0%,
+            rgba(124, 92, 255, 0.12),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(55, 180, 255, 0.08),
+            transparent 30%
+        ),
+        var(--bg);
+
+    color: var(--text);
+
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+
+button {
+    color: inherit;
+}
+
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+
+/* =========================================
+   TOPBAR
+========================================= */
+
+.topbar {
+    position: sticky;
+
+    top: 0;
+
+    z-index: 50;
+
+    backdrop-filter: blur(18px);
+
+    background: rgba(11, 13, 18, 0.78);
+
+    border-bottom: 1px solid var(--border);
+}
+
+
+.topbar-inner {
+    width: min(1180px, calc(100% - 32px));
+
+    min-height: 72px;
+
+    margin: auto;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.brand {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.brand-icon {
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(124, 92, 255, 0.3),
+            rgba(124, 92, 255, 0.08)
+        );
+
+    border: 1px solid rgba(124, 92, 255, 0.25);
+
+    font-size: 21px;
+}
+
+
+.brand strong {
+    display: block;
+
+    font-size: 15px;
+
+    line-height: 1.2;
+}
+
+
+.brand small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--text-muted);
+
+    font-size: 12px;
+}
+
+
+.icon-button {
+    width: 42px;
+    height: 42px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    background: var(--card);
+
+    cursor: pointer;
+
+    font-size: 22px;
+
+    transition:
+        transform 0.2s,
+        background 0.2s;
+}
+
+
+.icon-button:hover {
+    background: var(--card-hover);
+
+    transform: rotate(25deg);
+}
+
+
+/* =========================================
+   CONTAINER
+========================================= */
+
+.container {
+    width: min(1180px, calc(100% - 32px));
+
+    margin: 0 auto;
+
+    padding: 56px 0 80px;
+}
+
+
+.page-heading {
+    margin-bottom: 28px;
+}
+
+
+.eyebrow {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--accent-light);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.15em;
+}
+
+
+h1,
+h2,
+p {
+    margin-top: 0;
+}
+
+
+.page-heading h1 {
+    margin-bottom: 8px;
+
+    font-size: clamp(30px, 5vw, 46px);
+
+    line-height: 1.05;
+
+    letter-spacing: -0.04em;
+}
+
+
+.page-heading p {
+    margin: 0;
+
+    color: var(--text-soft);
+
+    font-size: 15px;
+}
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+.search-box {
+    position: relative;
+
+    margin-bottom: 30px;
+}
+
+
+.search-box input {
+    width: 100%;
+
+    height: 54px;
+
+    padding:
+        0 50px
+        0 48px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    outline: none;
+
+    background: var(--card);
+
+    color: var(--text);
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+
+
+.search-box input::placeholder {
+    color: var(--text-muted);
+}
+
+
+.search-box input:focus {
+    border-color: rgba(124, 92, 255, 0.6);
+
+    box-shadow:
+        0 0 0 4px rgba(124, 92, 255, 0.08);
+}
+
+
+.search-icon {
+    position: absolute;
+
+    left: 18px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: var(--text-muted);
+
+    font-size: 25px;
+
+    pointer-events: none;
+}
+
+
+.clear-search {
+    position: absolute;
+
+    right: 12px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 32px;
+    height: 32px;
+
+    border: 0;
+
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: var(--text-muted);
+
+    cursor: pointer;
+
+    font-size: 22px;
+}
+
+
+.clear-search:hover {
+    background: rgba(255, 255, 255, 0.06);
+
+    color: var(--text);
+}
+
+
+/* =========================================
+   FOLDER GRID
+========================================= */
+
+.folder-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(250px, 1fr)
+        );
+
+    gap: 16px;
+}
+
+
+.folder-card {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    min-height: 104px;
+
+    padding: 18px;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    background: var(--card);
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    transition:
+        transform 0.2s,
+        background 0.2s,
+        border-color 0.2s;
+}
+
+
+.folder-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 100px;
+    height: 100px;
+
+    right: -50px;
+    top: -50px;
+
+    border-radius: 50%;
+
+    background: rgba(124, 92, 255, 0.12);
+}
+
+
+.folder-card:hover {
+    transform: translateY(-3px);
+
+    background: var(--card-hover);
+
+    border-color:
+        rgba(124, 92, 255, 0.35);
+}
+
+
+.folder-icon {
+    flex: 0 0 auto;
+
+    width: 56px;
+    height: 56px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 16px;
+
+    background:
+        rgba(124, 92, 255, 0.12);
+
+    border: 1px solid
+        rgba(124, 92, 255, 0.2);
+
+    font-size: 25px;
+}
+
+
+.folder-content {
+    min-width: 0;
+
+    position: relative;
+
+    z-index: 1;
+}
+
+
+.folder-name {
+    margin: 0 0 5px;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+.folder-meta {
+    margin: 0;
+
+    color: var(--text-muted);
+
+    font-size: 12px;
+}
+
+
+/* =========================================
+   LOADING / ERROR / EMPTY
+========================================= */
+
+.loading-state,
+.empty-state,
+.error-state {
+    min-height: 260px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 30px;
+}
+
+
+.spinner {
+    width: 28px;
+    height: 28px;
+
+    border: 3px solid
+        rgba(255, 255, 255, 0.1);
+
+    border-top-color: var(--accent);
+
+    border-radius: 50%;
+
+    animation:
+        spin 0.8s linear infinite;
+}
+
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+.loading-state p {
+    margin: 14px 0 0;
+
+    color: var(--text-muted);
+
+    font-size: 14px;
+}
+
+
+.empty-icon,
+.error-icon {
+    width: 60px;
+    height: 60px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 18px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    font-size: 26px;
+
+    margin-bottom: 16px;
+}
+
+
+.error-icon {
+    color: var(--danger);
+
+    font-weight: 900;
+}
+
+
+.empty-state h2,
+.error-state h2 {
+    margin-bottom: 8px;
+
+    font-size: 20px;
+}
+
+
+.empty-state p,
+.error-state p {
+    max-width: 500px;
+
+    margin-bottom: 20px;
+
+    color: var(--text-muted);
+
+    font-size: 14px;
+}
+
+
+code {
+    padding: 3px 7px;
+
+    border-radius: 6px;
+
+    background: rgba(255, 255, 255, 0.07);
+
+    color: var(--accent-light);
+}
+
+
+.primary-button {
+    border: 0;
+
+    padding: 11px 18px;
+
+    border-radius: 10px;
+
+    background: var(--accent);
+
+    color: white;
+
+    cursor: pointer;
+
+    font-weight: 700;
+}
+
+
+.primary-button:hover {
+    background: var(--accent-light);
+}
+
+
+/* =========================================
+   PLAYER
+========================================= */
+
+.back-button {
+    margin-bottom: 25px;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--text-soft);
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+
+.back-button:hover {
+    color: var(--text);
+}
+
+
+.player-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.3fr)
+        minmax(300px, 0.7fr);
+
+    gap: 20px;
+
+    align-items: start;
+}
+
+
+.player-card,
+.episodes-card {
+    border: 1px solid var(--border);
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.035),
+            rgba(255, 255, 255, 0.012)
+        ),
+        var(--card);
+
+    box-shadow: var(--shadow);
+}
+
+
+.player-card {
+    padding: 28px;
+}
+
+
+.player-cover {
+    position: relative;
+
+    width: 100%;
+    aspect-ratio: 16 / 7;
+
+    display: grid;
+
+    place-items: center;
+
+    overflow: hidden;
+
+    border-radius: 18px;
+
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(124, 92, 255, 0.25),
+            transparent 50%
+        ),
+        #10131b;
+
+    border: 1px solid var(--border);
+
+    margin-bottom: 25px;
+}
+
+
+.player-cover span {
+    position: relative;
+
+    z-index: 2;
+
+    font-size: clamp(45px, 8vw, 75px);
+
+    filter:
+        drop-shadow(
+            0 10px 25px
+            rgba(0, 0, 0, 0.4)
+        );
+}
+
+
+.cover-decoration {
+    position: absolute;
+
+    width: 240px;
+    height: 240px;
+
+    border-radius: 50%;
+
+    border: 1px solid
+        rgba(124, 92, 255, 0.18);
+
+    box-shadow:
+        0 0 0 40px
+        rgba(124, 92, 255, 0.03),
+        0 0 0 80px
+        rgba(124, 92, 255, 0.02);
+}
+
+
+.player-info h1 {
+    margin-bottom: 8px;
+
+    font-size: clamp(23px, 4vw, 34px);
+
+    letter-spacing: -0.03em;
+
+    word-break: break-word;
+}
+
+
+.player-info p {
+    margin: 0;
+
+    color: var(--text-soft);
+
+    font-size: 14px;
+}
+
+
+.progress-area {
+    margin-top: 30px;
+}
+
+
+.time-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 8px;
+
+    color: var(--text-muted);
+
+    font-size: 12px;
+}
+
+
+.progress-bar {
+    width: 100%;
+
+    height: 5px;
+
+    appearance: none;
+
+    border-radius: 999px;
+
+    background:
+        rgba(255, 255, 255, 0.1);
+
+    cursor: pointer;
+}
+
+
+.progress-bar::-webkit-slider-thumb {
+    appearance: none;
+
+    width: 15px;
+    height: 15px;
+
+    border-radius: 50%;
+
+    background: var(--accent);
+
+    cursor: pointer;
+}
+
+
+.progress-bar::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+
+    border: 0;
+
+    border-radius: 50%;
+
+    background: var(--accent);
+
+    cursor: pointer;
+}
+
+
+.player-controls {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin: 28px 0;
+}
+
+
+.control-button {
+    border: 0;
+
+    cursor: pointer;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 50%;
+
+    transition:
+        transform 0.15s,
+        background 0.15s;
+}
+
+
+.control-button:hover {
+    transform: scale(1.06);
+}
+
+
+.control-button.secondary {
+    width: 48px;
+    height: 48px;
+
+    background:
+        rgba(255, 255, 255, 0.06);
+
+    border: 1px solid var(--border);
+
+    font-size: 19px;
+}
+
+
+.control-button.play {
+    width: 66px;
+    height: 66px;
+
+    background: var(--accent);
+
+    color: white;
+
+    font-size: 24px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(124, 92, 255, 0.3);
+}
+
+
+.extra-controls {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 9px;
+
+    padding-top: 18px;
+
+    border-top: 1px solid var(--border);
+}
+
+
+.speed-control {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: var(--text-muted);
+
+    font-size: 12px;
+}
+
+
+.speed-control select,
+.small-button {
+    height: 34px;
+
+    padding: 0 10px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    background: rgba(255, 255, 255, 0.04);
+
+    color: var(--text);
+
+    cursor: pointer;
+
+    outline: none;
+}
+
+
+.small-button:hover,
+.speed-control select:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+
+/* =========================================
+   EPISODES
+========================================= */
+
+.episodes-card {
+    overflow: hidden;
+}
+
+
+.episodes-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 24px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+
+.episodes-header h2 {
+    margin: 0;
+
+    font-size: 20px;
+}
+
+
+.episode-count {
+    min-width: 32px;
+
+    padding: 5px 9px;
+
+    border-radius: 8px;
+
+    background:
+        rgba(124, 92, 255, 0.12);
+
+    color: var(--accent-light);
+
+    text-align: center;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+.episode-list {
+    max-height: 620px;
+
+    overflow-y: auto;
+
+    padding: 8px;
+}
+
+
+.episode-item {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 12px;
+
+    border: 0;
+
+    border-radius: 12px;
+
+    background: transparent;
+
+    color: var(--text);
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s;
+}
+
+
+.episode-item:hover {
+    background:
+        rgba(255, 255, 255, 0.05);
+}
+
+
+.episode-item.active {
+    background:
+        rgba(124, 92, 255, 0.12);
+}
+
+
+.episode-number {
+    flex: 0 0 auto;
+
+    width: 38px;
+    height: 38px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 10px;
+
+    background:
+        rgba(255, 255, 255, 0.05);
+
+    color: var(--text-muted);
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+.episode-item.active .episode-number {
+    background: var(--accent);
+
+    color: white;
+}
+
+
+.episode-details {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+.episode-name {
+    display: block;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.episode-progress {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+}
+
+
+.loading-small {
+    min-height: 160px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    color: var(--text-muted);
+
+    font-size: 13px;
+}
+
+
+/* =========================================
+   TOAST
+========================================= */
+
+.toast {
+    position: fixed;
+
+    z-index: 100;
+
+    left: 50%;
+
+    bottom: 24px;
+
+    transform:
+        translate(-50%, 20px);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    padding: 11px 16px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    background: #1a1e28;
+
+    box-shadow: var(--shadow);
+
+    color: var(--text);
+
+    font-size: 13px;
+
+    transition:
+        opacity 0.2s,
+        transform 0.2s;
+}
+
+
+.toast.show {
+    opacity: 1;
+
+    transform:
+        translate(-50%, 0);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 800px) {
+
+    .container {
+        padding-top: 38px;
+    }
+
+
+    .player-layout {
+        grid-template-columns: 1fr;
+    }
+
+
+    .episodes-card {
+        order: 2;
+    }
+
+
+    .episode-list {
+        max-height: 420px;
+    }
+
+}
+
+
+@media (max-width: 520px) {
+
+    .topbar-inner,
+    .container {
+        width: min(
+            100% - 20px,
+            1180px
+        );
+    }
+
+
+    .topbar-inner {
+        min-height: 64px;
+    }
+
+
+    .container {
+        padding-bottom: 50px;
+    }
+
+
+    .page-heading h1 {
+        font-size: 32px;
+    }
+
+
+    .folder-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .player-card {
+        padding: 16px;
+    }
+
+
+    .player-cover {
+        aspect-ratio: 16 / 9;
+    }
+
+
+    .player-controls {
+        gap: 14px;
+    }
+
+
+    .control-button.secondary {
+        width: 44px;
+        height: 44px;
+    }
+
+
+    .control-button.play {
+        width: 60px;
+        height: 60px;
+    }
+
+
+    .episodes-header {
+        padding: 18px;
+    }
+
+}
