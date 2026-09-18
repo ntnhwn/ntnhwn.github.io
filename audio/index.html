@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="description"
+        content="Thư viện audio truyện"
+    >
+
+    <title>Audio Library</title>
+
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- Header -->
+    <header class="topbar">
+        <div class="topbar-inner">
+
+            <a href="/audio/" class="brand">
+                <span class="brand-icon">🎧</span>
+
+                <span>
+                    <strong>Audio Library</strong>
+                    <small>Thư viện truyện</small>
+                </span>
+            </a>
+
+            <button
+                id="refreshButton"
+                class="icon-button"
+                type="button"
+                title="Làm mới"
+                aria-label="Làm mới"
+            >
+                ↻
+            </button>
+
+        </div>
+    </header>
+
+
+    <!-- Main -->
+    <main class="container">
+
+        <!-- Library view -->
+        <section id="libraryView">
+
+            <div class="page-heading">
+                <div>
+                    <span class="eyebrow">THƯ VIỆN</span>
+                    <h1>Danh sách truyện</h1>
+                    <p id="libraryDescription">
+                        Đang tải dữ liệu từ GitHub...
+                    </p>
+                </div>
+            </div>
+
+
+            <!-- Search -->
+            <div class="search-box">
+
+                <span class="search-icon">⌕</span>
+
+                <input
+                    id="searchInput"
+                    type="search"
+                    placeholder="Tìm kiếm truyện..."
+                    autocomplete="off"
+                >
+
+                <button
+                    id="clearSearch"
+                    class="clear-search hidden"
+                    type="button"
+                    aria-label="Xóa tìm kiếm"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <!-- Loading -->
+            <div id="libraryLoading" class="loading-state">
+
+                <div class="spinner"></div>
+
+                <p>Đang tải danh sách truyện...</p>
+
+            </div>
+
+
+            <!-- Error -->
+            <div id="libraryError" class="error-state hidden">
+
+                <div class="error-icon">!</div>
+
+                <h2>Không thể tải thư viện</h2>
+
+                <p id="libraryErrorText">
+                    Đã xảy ra lỗi khi kết nối GitHub.
+                </p>
+
+                <button
+                    id="retryButton"
+                    class="primary-button"
+                    type="button"
+                >
+                    Thử lại
+                </button>
+
+            </div>
+
+
+            <!-- Empty -->
+            <div id="libraryEmpty" class="empty-state hidden">
+
+                <div class="empty-icon">🎧</div>
+
+                <h2>Chưa có truyện</h2>
+
+                <p>
+                    Hãy tạo folder truyện bên trong thư mục
+                    <code>audio/</code>.
+                </p>
+
+            </div>
+
+
+            <!-- Folder list -->
+            <div
+                id="folderList"
+                class="folder-grid hidden"
+            ></div>
+
+        </section>
+
+
+        <!-- Player view -->
+        <section
+            id="playerView"
+            class="player-view hidden"
+        >
+
+            <button
+                id="backButton"
+                class="back-button"
+                type="button"
+            >
+                ←
+                <span>Thư viện</span>
+            </button>
+
+
+            <div class="player-layout">
+
+                <!-- Player -->
+                <div class="player-card">
+
+                    <div class="player-cover">
+
+                        <div class="cover-decoration"></div>
+
+                        <span>🎧</span>
+
+                    </div>
+
+
+                    <div class="player-info">
+
+                        <span class="eyebrow">
+                            ĐANG PHÁT
+                        </span>
+
+                        <h1 id="bookTitle">
+                            Đang tải...
+                        </h1>
+
+                        <p id="episodeTitle">
+                            Chưa chọn tập
+                        </p>
+
+                    </div>
+
+
+                    <audio
+                        id="audioPlayer"
+                        preload="metadata"
+                    ></audio>
+
+
+                    <!-- Progress -->
+                    <div class="progress-area">
+
+                        <div class="time-row">
+
+                            <span id="currentTime">
+                                00:00
+                            </span>
+
+                            <span id="duration">
+                                00:00
+                            </span>
+
+                        </div>
+
+                        <input
+                            id="progressBar"
+                            class="progress-bar"
+                            type="range"
+                            min="0"
+                            max="100"
+                            value="0"
+                            step="0.1"
+                            aria-label="Tiến trình"
+                        >
+
+                    </div>
+
+
+                    <!-- Controls -->
+                    <div class="player-controls">
+
+                        <button
+                            id="previousButton"
+                            class="control-button secondary"
+                            type="button"
+                            title="Tập trước"
+                            aria-label="Tập trước"
+                        >
+                            ⏮
+                        </button>
+
+
+                        <button
+                            id="playButton"
+                            class="control-button play"
+                            type="button"
+                            title="Phát / Tạm dừng"
+                            aria-label="Phát / Tạm dừng"
+                        >
+                            ▶
+                        </button>
+
+
+                        <button
+                            id="nextButton"
+                            class="control-button secondary"
+                            type="button"
+                            title="Tập tiếp theo"
+                            aria-label="Tập tiếp theo"
+                        >
+                            ⏭
+                        </button>
+
+                    </div>
+
+
+                    <!-- Extra controls -->
+                    <div class="extra-controls">
+
+                        <label class="speed-control">
+
+                            <span>Tốc độ</span>
+
+                            <select id="speedSelect">
+                                <option value="0.75">0.75×</option>
+                                <option value="1" selected>1×</option>
+                                <option value="1.25">1.25×</option>
+                                <option value="1.5">1.5×</option>
+                                <option value="1.75">1.75×</option>
+                                <option value="2">2×</option>
+                            </select>
+
+                        </label>
+
+                        <button
+                            id="rewindButton"
+                            class="small-button"
+                            type="button"
+                        >
+                            ↶ 10s
+                        </button>
+
+                        <button
+                            id="forwardButton"
+                            class="small-button"
+                            type="button"
+                        >
+                            30s ↷
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Episode list -->
+                <aside class="episodes-card">
+
+                    <div class="episodes-header">
+
+                        <div>
+                            <span class="eyebrow">
+                                DANH SÁCH
+                            </span>
+
+                            <h2>Các tập</h2>
+                        </div>
+
+                        <span
+                            id="episodeCount"
+                            class="episode-count"
+                        >
+                            0
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        id="episodeLoading"
+                        class="loading-small"
+                    >
+                        <div class="spinner"></div>
+                        <span>Đang tải...</span>
+                    </div>
+
+
+                    <div
+                        id="episodeList"
+                        class="episode-list"
+                    ></div>
+
+                </aside>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Toast -->
+    <div
+        id="toast"
+        class="toast"
+        role="status"
+        aria-live="polite"
+    ></div>
+
+</div>
+
+
+<script src="./app.js"></script>
+
+</body>
+</html>
