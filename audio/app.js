@@ -1,638 +1,460 @@
 "use strict";
 
 /*
- * ============================================
- * AUDIO LIBRARY
- * GitHub repository:
- * ntnhwn/ntnhwn.github.io
- * ============================================
+|--------------------------------------------------------------------------
+| CONFIG
+|--------------------------------------------------------------------------
+*/
+
+/*
+ * GitHub repository chứa metadata.
+ *
+ * Ví dụ:
+ * https://github.com/ntnhwn/audio
+ *
+ * thì:
+ *
+ * OWNER = "ntnhwn"
+ * REPO  = "audio"
+ * BRANCH = "main"
  */
 
+const GITHUB_OWNER = "ntnhwn";
+const GITHUB_REPO = "audio";
+const GITHUB_BRANCH = "main";
 
-const CONFIG = {
+const GITHUB_DATA_PATH = "data";
 
-    owner: "ntnhwn",
-
-    repo: "ntnhwn.github.io",
-
-    branch: "main",
-
-    audioRoot: "audio",
-
-    apiBase:
-        "https://api.github.com",
-
-    rawBase:
-        "https://raw.githubusercontent.com",
-
-    supportedExtensions: [
-        ".mp3",
-        ".m4a",
-        ".ogg",
-        ".wav",
-        ".aac",
-        ".flac"
-    ]
-
-};
+/*
+ * Cloudflare Worker
+ */
+const WORKER_URL = "https://audio.thnhan.dev";
 
 
-/* =========================================
-   DOM
-========================================= */
+/*
+|--------------------------------------------------------------------------
+| GITHUB URL
+|--------------------------------------------------------------------------
+*/
 
-const $ = (selector) =>
-    document.querySelector(selector);
+function githubRawUrl(path) {
+    return (
+        `https://raw.githubusercontent.com/` +
+        `${GITHUB_OWNER}/` +
+        `${GITHUB_REPO}/` +
+        `${GITHUB_BRANCH}/` +
+        `${path}`
+    );
+}
 
+
+/*
+|--------------------------------------------------------------------------
+| DOM
+|--------------------------------------------------------------------------
+*/
 
 const elements = {
-
-    libraryView:
-        $("#libraryView"),
-
-    playerView:
-        $("#playerView"),
-
-    folderList:
-        $("#folderList"),
-
-    libraryLoading:
-        $("#libraryLoading"),
-
-    libraryError:
-        $("#libraryError"),
-
-    libraryErrorText:
-        $("#libraryErrorText"),
-
-    libraryEmpty:
-        $("#libraryEmpty"),
+    libraryView: document.getElementById("libraryView"),
+    playerView: document.getElementById("playerView"),
 
     libraryDescription:
-        $("#libraryDescription"),
+        document.getElementById("libraryDescription"),
+
+    libraryLoading:
+        document.getElementById("libraryLoading"),
+
+    libraryError:
+        document.getElementById("libraryError"),
+
+    libraryErrorText:
+        document.getElementById("libraryErrorText"),
+
+    libraryEmpty:
+        document.getElementById("libraryEmpty"),
+
+    folderList:
+        document.getElementById("folderList"),
 
     searchInput:
-        $("#searchInput"),
+        document.getElementById("searchInput"),
 
     clearSearch:
-        $("#clearSearch"),
-
-    refreshButton:
-        $("#refreshButton"),
+        document.getElementById("clearSearch"),
 
     retryButton:
-        $("#retryButton"),
+        document.getElementById("retryButton"),
+
+    refreshButton:
+        document.getElementById("refreshButton"),
 
     backButton:
-        $("#backButton"),
+        document.getElementById("backButton"),
 
     bookTitle:
-        $("#bookTitle"),
+        document.getElementById("bookTitle"),
 
     episodeTitle:
-        $("#episodeTitle"),
+        document.getElementById("episodeTitle"),
 
     audioPlayer:
-        $("#audioPlayer"),
-
-    playButton:
-        $("#playButton"),
-
-    previousButton:
-        $("#previousButton"),
-
-    nextButton:
-        $("#nextButton"),
-
-    progressBar:
-        $("#progressBar"),
+        document.getElementById("audioPlayer"),
 
     currentTime:
-        $("#currentTime"),
+        document.getElementById("currentTime"),
 
     duration:
-        $("#duration"),
+        document.getElementById("duration"),
+
+    progressBar:
+        document.getElementById("progressBar"),
+
+    playButton:
+        document.getElementById("playButton"),
+
+    previousButton:
+        document.getElementById("previousButton"),
+
+    nextButton:
+        document.getElementById("nextButton"),
 
     speedSelect:
-        $("#speedSelect"),
+        document.getElementById("speedSelect"),
 
     rewindButton:
-        $("#rewindButton"),
+        document.getElementById("rewindButton"),
 
     forwardButton:
-        $("#forwardButton"),
-
-    episodeList:
-        $("#episodeList"),
-
-    episodeLoading:
-        $("#episodeLoading"),
+        document.getElementById("forwardButton"),
 
     episodeCount:
-        $("#episodeCount"),
+        document.getElementById("episodeCount"),
+
+    episodeLoading:
+        document.getElementById("episodeLoading"),
+
+    episodeList:
+        document.getElementById("episodeList"),
 
     toast:
-        $("#toast")
-
+        document.getElementById("toast"),
 };
 
 
-/* =========================================
-   STATE
-========================================= */
+/*
+|--------------------------------------------------------------------------
+| STATE
+|--------------------------------------------------------------------------
+*/
 
-const state = {
+let books = [];
 
-    folders: [],
+let currentBook = null;
 
-    filteredFolders: [],
+let currentEpisodes = [];
 
-    episodes: [],
+let currentEpisodeIndex = -1;
 
-    currentFolder: null,
-
-    currentEpisodeIndex: -1,
-
-    isPlayerMode: false,
-
-    toastTimer: null
-
-};
+let toastTimer = null;
 
 
-/* =========================================
-   GITHUB API
-========================================= */
+/*
+|--------------------------------------------------------------------------
+| INIT
+|--------------------------------------------------------------------------
+*/
 
-function githubContentsUrl(path = "") {
+document.addEventListener("DOMContentLoaded", () => {
 
-    const encodedPath = path
-        .split("/")
-        .map(encodeURIComponent)
-        .join("/");
+    setupEvents();
 
-    return (
-        `${CONFIG.apiBase}/repos/` +
-        `${CONFIG.owner}/` +
-        `${CONFIG.repo}/contents/` +
-        `${encodedPath}` +
-        `?ref=${encodeURIComponent(CONFIG.branch)}`
-    );
+    loadBooks();
 
-}
+});
 
 
-async function githubFetch(path) {
+/*
+|--------------------------------------------------------------------------
+| EVENTS
+|--------------------------------------------------------------------------
+*/
 
-    const response = await fetch(
-        githubContentsUrl(path),
-        {
-            headers: {
-                "Accept":
-                    "application/vnd.github+json"
-            }
+function setupEvents() {
+
+    elements.refreshButton.addEventListener(
+        "click",
+        () => {
+            loadBooks(true);
         }
     );
 
 
-    if (!response.ok) {
-
-        let message =
-            `GitHub API lỗi ${response.status}`;
-
-        try {
-
-            const error =
-                await response.json();
-
-            if (error.message) {
-                message = error.message;
-            }
-
-        } catch (_) {}
-
-        throw new Error(message);
-    }
-
-
-    return response.json();
-
-}
-
-
-/* =========================================
-   FILE HELPERS
-========================================= */
-
-function isAudioFile(item) {
-
-    if (!item || item.type !== "file") {
-        return false;
-    }
-
-
-    const name =
-        String(item.name || "")
-            .toLowerCase();
-
-
-    return CONFIG.supportedExtensions
-        .some(
-            extension =>
-                name.endsWith(extension)
-        );
-
-}
-
-
-function isFolder(item) {
-
-    return (
-        item &&
-        item.type === "dir"
-    );
-
-}
-
-
-function naturalSort(a, b) {
-
-    return String(a)
-        .localeCompare(
-            String(b),
-            undefined,
-            {
-                numeric: true,
-                sensitivity: "base"
-            }
-        );
-
-}
-
-
-/* =========================================
-   PATH / URL
-========================================= */
-
-function getFolderFromPath() {
-
-    const path =
-        window.location.pathname;
-
-
-    const marker =
-        "/audio/";
-
-
-    const index =
-        path.indexOf(marker);
-
-
-    if (index === -1) {
-        return null;
-    }
-
-
-    let rest =
-        path.substring(
-            index + marker.length
-        );
-
-
-    rest =
-        rest.replace(
-            /^\/+|\/+$/g,
-            ""
-        );
-
-
-    if (!rest) {
-        return null;
-    }
-
-
-    return decodeURIComponent(rest);
-
-}
-
-
-function getAudioFolderUrl(folderName) {
-
-    return (
-        `/audio/` +
-        encodeURIComponent(folderName) +
-        `/`
-    );
-
-}
-
-
-function navigateToFolder(folderName) {
-
-    const url =
-        getAudioFolderUrl(folderName);
-
-    window.history.pushState(
-        {
-            folder: folderName
-        },
-        "",
-        url
-    );
-
-
-    loadPlayer(folderName);
-
-}
-
-
-function navigateToLibrary() {
-
-    window.history.pushState(
-        {},
-        "",
-        "/audio/"
-    );
-
-
-    showLibrary();
-
-}
-
-
-/* =========================================
-   LOCAL STORAGE
-========================================= */
-
-function storageKey(folder, episodeName) {
-
-    return (
-        `audio-progress::` +
-        `${folder}::` +
-        `${episodeName}`
-    );
-
-}
-
-
-function readProgress(folder, episodeName) {
-
-    try {
-
-        const raw =
-            localStorage.getItem(
-                storageKey(
-                    folder,
-                    episodeName
-                )
-            );
-
-
-        if (!raw) {
-            return 0;
+    elements.retryButton.addEventListener(
+        "click",
+        () => {
+            loadBooks(true);
         }
-
-
-        const value =
-            Number(raw);
-
-
-        return Number.isFinite(value)
-            ? value
-            : 0;
-
-    } catch (_) {
-
-        return 0;
-
-    }
-
-}
-
-
-function saveProgress() {
-
-    if (
-        !state.currentFolder ||
-        state.currentEpisodeIndex < 0 ||
-        !state.episodes[
-            state.currentEpisodeIndex
-        ]
-    ) {
-        return;
-    }
-
-
-    const episode =
-        state.episodes[
-            state.currentEpisodeIndex
-        ];
-
-
-    const current =
-        elements.audioPlayer.currentTime;
-
-
-    if (
-        !Number.isFinite(current) ||
-        current <= 0
-    ) {
-        return;
-    }
-
-
-    try {
-
-        localStorage.setItem(
-            storageKey(
-                state.currentFolder,
-                episode.name
-            ),
-            String(current)
-        );
-
-    } catch (_) {}
-
-}
-
-
-/* =========================================
-   FORMATTERS
-========================================= */
-
-function formatTime(seconds) {
-
-    if (
-        !Number.isFinite(seconds) ||
-        seconds < 0
-    ) {
-        return "00:00";
-    }
-
-
-    const total =
-        Math.floor(seconds);
-
-
-    const hours =
-        Math.floor(total / 3600);
-
-
-    const minutes =
-        Math.floor(
-            (total % 3600) / 60
-        );
-
-
-    const secs =
-        total % 60;
-
-
-    if (hours > 0) {
-
-        return [
-            hours,
-            minutes,
-            secs
-        ]
-            .map(
-                value =>
-                    String(value)
-                        .padStart(2, "0")
-            )
-            .join(":");
-
-    }
-
-
-    return [
-        minutes,
-        secs
-    ]
-        .map(
-            value =>
-                String(value)
-                    .padStart(2, "0")
-        )
-        .join(":");
-
-}
-
-
-function formatEpisodeName(filename) {
-
-    const name =
-        String(filename)
-            .replace(
-                /\.[^/.]+$/,
-                ""
-            );
-
-
-    return name
-        .replace(
-            /^(\d+)[\s._-]*/,
-            "Tập $1 — "
-        );
-
-}
-
-
-function extractEpisodeNumber(filename) {
-
-    const match =
-        String(filename)
-            .match(/^\s*(\d+)/);
-
-
-    if (!match) {
-        return Number.MAX_SAFE_INTEGER;
-    }
-
-
-    return Number(match[1]);
-
-}
-
-
-/* =========================================
-   TOAST
-========================================= */
-
-function showToast(message) {
-
-    clearTimeout(
-        state.toastTimer
     );
 
 
-    elements.toast.textContent =
-        message;
-
-
-    elements.toast.classList.add(
-        "show"
+    elements.backButton.addEventListener(
+        "click",
+        () => {
+            showLibrary();
+        }
     );
 
 
-    state.toastTimer =
-        setTimeout(() => {
+    elements.searchInput.addEventListener(
+        "input",
+        filterBooks
+    );
 
-            elements.toast.classList.remove(
-                "show"
+
+    elements.clearSearch.addEventListener(
+        "click",
+        () => {
+
+            elements.searchInput.value = "";
+
+            filterBooks();
+
+            elements.searchInput.focus();
+
+        }
+    );
+
+
+    elements.playButton.addEventListener(
+        "click",
+        togglePlay
+    );
+
+
+    elements.previousButton.addEventListener(
+        "click",
+        playPrevious
+    );
+
+
+    elements.nextButton.addEventListener(
+        "click",
+        playNext
+    );
+
+
+    elements.rewindButton.addEventListener(
+        "click",
+        () => {
+
+            if (!elements.audioPlayer.duration) {
+                return;
+            }
+
+            elements.audioPlayer.currentTime = Math.max(
+                0,
+                elements.audioPlayer.currentTime - 10
             );
 
-        }, 2200);
+        }
+    );
+
+
+    elements.forwardButton.addEventListener(
+        "click",
+        () => {
+
+            if (!elements.audioPlayer.duration) {
+                return;
+            }
+
+            elements.audioPlayer.currentTime = Math.min(
+                elements.audioPlayer.duration,
+                elements.audioPlayer.currentTime + 30
+            );
+
+        }
+    );
+
+
+    elements.speedSelect.addEventListener(
+        "change",
+        () => {
+
+            elements.audioPlayer.playbackRate =
+                Number(elements.speedSelect.value);
+
+        }
+    );
+
+
+    elements.progressBar.addEventListener(
+        "input",
+        () => {
+
+            const duration =
+                elements.audioPlayer.duration;
+
+            if (!duration) {
+                return;
+            }
+
+            const percentage =
+                Number(elements.progressBar.value);
+
+            elements.audioPlayer.currentTime =
+                duration * percentage / 100;
+
+        }
+    );
+
+
+    elements.audioPlayer.addEventListener(
+        "timeupdate",
+        updateProgress
+    );
+
+
+    elements.audioPlayer.addEventListener(
+        "loadedmetadata",
+        updateDuration
+    );
+
+
+    elements.audioPlayer.addEventListener(
+        "play",
+        () => {
+            elements.playButton.textContent = "⏸";
+        }
+    );
+
+
+    elements.audioPlayer.addEventListener(
+        "pause",
+        () => {
+            elements.playButton.textContent = "▶";
+        }
+    );
+
+
+    elements.audioPlayer.addEventListener(
+        "ended",
+        () => {
+
+            elements.playButton.textContent = "▶";
+
+            playNext();
+
+        }
+    );
+
+
+    elements.audioPlayer.addEventListener(
+        "error",
+        () => {
+
+            showToast(
+                "Không thể phát file audio"
+            );
+
+        }
+    );
 
 }
 
 
-/* =========================================
-   LIBRARY
-========================================= */
+/*
+|--------------------------------------------------------------------------
+| LOAD BOOKS
+|--------------------------------------------------------------------------
+*/
 
-async function loadLibrary() {
+async function loadBooks(forceRefresh = false) {
 
     showLibraryLoading();
 
-
     try {
 
-        const items =
-            await githubFetch(
-                CONFIG.audioRoot
+        const cacheBust = forceRefresh
+            ? `?t=${Date.now()}`
+            : "";
+
+        const url =
+            githubRawUrl(
+                `${GITHUB_DATA_PATH}/books.json`
+            ) +
+            cacheBust;
+
+
+        const response =
+            await fetch(url, {
+                cache: forceRefresh
+                    ? "no-store"
+                    : "default"
+            });
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `GitHub HTTP ${response.status}`
             );
 
-
-        state.folders =
-            items
-                .filter(isFolder)
-                .sort(
-                    (a, b) =>
-                        naturalSort(
-                            a.name,
-                            b.name
-                        )
-                );
+        }
 
 
-        state.filteredFolders =
-            [...state.folders];
+        const data =
+            await response.json();
 
 
-        renderFolders();
+        /*
+         * Hỗ trợ cả:
+         *
+         * {
+         *   "books": [...]
+         * }
+         *
+         * và:
+         *
+         * [...]
+         */
+
+        if (Array.isArray(data)) {
+
+            books = data;
+
+        } else if (
+            data &&
+            Array.isArray(data.books)
+        ) {
+
+            books = data.books;
+
+        } else {
+
+            throw new Error(
+                "books.json không đúng định dạng"
+            );
+
+        }
+
+
+        books = books.map(normalizeBook);
+
+
+        renderBooks();
 
 
         elements.libraryDescription.textContent =
-            `${state.folders.length} truyện`;
-
+            `${books.length} truyện trong thư viện`;
 
     } catch (error) {
 
         console.error(error);
 
         showLibraryError(
-            error.message
+            error.message ||
+            "Không thể tải dữ liệu từ GitHub."
         );
 
     }
@@ -640,518 +462,727 @@ async function loadLibrary() {
 }
 
 
-function renderFolders() {
+/*
+|--------------------------------------------------------------------------
+| NORMALIZE BOOK
+|--------------------------------------------------------------------------
+*/
 
-    elements.libraryLoading
-        .classList.add("hidden");
+function normalizeBook(book) {
 
-    elements.libraryError
-        .classList.add("hidden");
+    const id =
+        String(
+            book.id ??
+            book.slug ??
+            book.path ??
+            ""
+        );
 
 
-    if (state.filteredFolders.length === 0) {
+    const name =
+        String(
+            book.name ??
+            book.title ??
+            id
+        );
 
-        elements.folderList
-            .classList.add("hidden");
 
-        elements.libraryEmpty
-            .classList.remove("hidden");
+    return {
+        ...book,
+
+        id,
+        slug:
+            String(
+                book.slug ??
+                id
+            ),
+
+        name,
+
+        path:
+            String(
+                book.path ??
+                id
+            ),
+
+        description:
+            book.description ??
+            "",
+
+        author:
+            book.author ??
+            "",
+
+        cover:
+            book.cover ??
+            ""
+    };
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| RENDER BOOKS
+|--------------------------------------------------------------------------
+*/
+
+function renderBooks() {
+
+    const keyword =
+        elements.searchInput.value
+            .trim()
+            .toLowerCase();
+
+
+    const filtered =
+        books.filter(book => {
+
+            if (!keyword) {
+                return true;
+            }
+
+            const text = [
+                book.name,
+                book.title,
+                book.author,
+                book.description,
+                book.slug
+            ]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase();
+
+
+            return text.includes(keyword);
+
+        });
+
+
+    elements.folderList.innerHTML = "";
+
+
+    if (filtered.length === 0) {
+
+        elements.folderList.classList.add(
+            "hidden"
+        );
+
+        elements.libraryEmpty.classList.remove(
+            "hidden"
+        );
 
         return;
 
     }
 
 
-    elements.libraryEmpty
-        .classList.add("hidden");
+    elements.libraryEmpty.classList.add(
+        "hidden"
+    );
+
+    elements.folderList.classList.remove(
+        "hidden"
+    );
 
 
-    elements.folderList
-        .classList.remove("hidden");
+    filtered.forEach(
+        (book, index) => {
 
+            const card =
+                createBookCard(
+                    book,
+                    index
+                );
 
-    elements.folderList.innerHTML =
-        state.filteredFolders
-            .map(
-                folder =>
-                    createFolderCard(folder)
-            )
-            .join("");
+            elements.folderList.appendChild(
+                card
+            );
 
-}
-
-
-function createFolderCard(folder) {
-
-    const safeName =
-        escapeHtml(folder.name);
-
-
-    return `
-        <article
-            class="folder-card"
-            data-folder="${escapeAttribute(folder.name)}"
-            tabindex="0"
-            role="button"
-            aria-label="Mở ${safeName}"
-        >
-
-            <div class="folder-icon">
-                📚
-            </div>
-
-            <div class="folder-content">
-
-                <h2 class="folder-name">
-                    ${safeName}
-                </h2>
-
-                <p class="folder-meta">
-                    Mở thư viện truyện →
-                </p>
-
-            </div>
-
-        </article>
-    `;
+        }
+    );
 
 }
 
 
-function showLibraryLoading() {
+/*
+|--------------------------------------------------------------------------
+| BOOK CARD
+|--------------------------------------------------------------------------
+*/
 
-    elements.libraryLoading
-        .classList.remove("hidden");
+function createBookCard(book, index) {
 
-    elements.libraryError
-        .classList.add("hidden");
-
-    elements.libraryEmpty
-        .classList.add("hidden");
-
-    elements.folderList
-        .classList.add("hidden");
-
-}
+    const button =
+        document.createElement("button");
 
 
-function showLibraryError(message) {
+    button.type = "button";
 
-    elements.libraryLoading
-        .classList.add("hidden");
-
-    elements.libraryEmpty
-        .classList.add("hidden");
-
-    elements.folderList
-        .classList.add("hidden");
-
-    elements.libraryError
-        .classList.remove("hidden");
-
-    elements.libraryErrorText.textContent =
-        message ||
-        "Không thể tải dữ liệu từ GitHub.";
-
-}
+    button.className =
+        "book-card";
 
 
-function filterFolders() {
+    /*
+     * Cover
+     */
 
-    const keyword =
-        elements.searchInput.value
-            .trim()
-            .toLocaleLowerCase();
+    const cover =
+        document.createElement("div");
 
-
-    elements.clearSearch
-        .classList.toggle(
-            "hidden",
-            keyword.length === 0
-        );
+    cover.className =
+        "book-cover";
 
 
-    if (!keyword) {
+    if (book.cover) {
 
-        state.filteredFolders =
-            [...state.folders];
+        const image =
+            document.createElement("img");
+
+        image.src = book.cover;
+
+        image.alt =
+            book.name;
+
+        image.loading = "lazy";
+
+        cover.appendChild(image);
 
     } else {
 
-        state.filteredFolders =
-            state.folders.filter(
-                folder =>
-                    folder.name
-                        .toLocaleLowerCase()
-                        .includes(keyword)
-            );
+        const icon =
+            document.createElement("span");
+
+        icon.textContent = "🎧";
+
+        cover.appendChild(icon);
 
     }
 
 
-    renderFolders();
+    /*
+     * Content
+     */
+
+    const content =
+        document.createElement("div");
+
+    content.className =
+        "book-card-content";
+
+
+    const title =
+        document.createElement("h2");
+
+    title.textContent =
+        book.name;
+
+
+    const meta =
+        document.createElement("p");
+
+    meta.textContent =
+        book.author ||
+        "Thư viện audio";
+
+
+    content.appendChild(title);
+
+    content.appendChild(meta);
+
+
+    /*
+     * Arrow
+     */
+
+    const arrow =
+        document.createElement("span");
+
+    arrow.className =
+        "book-card-arrow";
+
+    arrow.textContent =
+        "›";
+
+
+    button.appendChild(cover);
+
+    button.appendChild(content);
+
+    button.appendChild(arrow);
+
+
+    button.addEventListener(
+        "click",
+        () => {
+            openBook(book);
+        }
+    );
+
+
+    return button;
 
 }
 
 
-/* =========================================
-   PLAYER
-========================================= */
+/*
+|--------------------------------------------------------------------------
+| OPEN BOOK
+|--------------------------------------------------------------------------
+*/
 
-async function loadPlayer(folderName) {
+async function openBook(book) {
 
-    state.isPlayerMode = true;
+    currentBook = book;
 
-    state.currentFolder =
-        folderName;
+    currentEpisodes = [];
 
-    state.episodes = [];
-
-    state.currentEpisodeIndex = -1;
+    currentEpisodeIndex = -1;
 
 
-    elements.libraryView
-        .classList.add("hidden");
+    elements.libraryView.classList.add(
+        "hidden"
+    );
 
-    elements.playerView
-        .classList.remove("hidden");
+    elements.playerView.classList.remove(
+        "hidden"
+    );
 
 
     elements.bookTitle.textContent =
-        folderName;
-
+        book.name;
 
     elements.episodeTitle.textContent =
         "Đang tải danh sách tập...";
 
 
-    elements.episodeList.innerHTML =
-        "";
-
-
-    elements.episodeLoading
-        .classList.remove("hidden");
-
+    elements.episodeList.innerHTML = "";
 
     elements.episodeCount.textContent =
         "0";
 
+    elements.episodeLoading.classList.remove(
+        "hidden"
+    );
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
 
     try {
 
-        const path =
-            `${CONFIG.audioRoot}/${folderName}`;
-
-
-        const items =
-            await githubFetch(path);
-
-
-        state.episodes =
-            items
-                .filter(isAudioFile)
-                .sort((a, b) => {
-
-                    const numberA =
-                        extractEpisodeNumber(
-                            a.name
-                        );
-
-                    const numberB =
-                        extractEpisodeNumber(
-                            b.name
-                        );
-
-
-                    if (
-                        numberA !== numberB
-                    ) {
-                        return (
-                            numberA -
-                            numberB
-                        );
-                    }
-
-
-                    return naturalSort(
-                        a.name,
-                        b.name
-                    );
-
-                });
-
-
-        elements.episodeCount.textContent =
-            String(
-                state.episodes.length
+        const data =
+            await loadBookEpisodes(
+                book
             );
 
 
-        elements.episodeLoading
-            .classList.add("hidden");
-
-
-        if (
-            state.episodes.length === 0
-        ) {
-
-            elements.episodeTitle.textContent =
-                "Không tìm thấy file audio.";
-
-            elements.episodeList.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-icon">
-                        🎵
-                    </div>
-
-                    <p>
-                        Folder này chưa có
-                        file audio hỗ trợ.
-                    </p>
-                </div>
-            `;
-
-            return;
-
-        }
+        currentEpisodes =
+            data.episodes || [];
 
 
         renderEpisodes();
 
 
-        const savedEpisode =
-            findSavedEpisode();
+        if (currentEpisodes.length > 0) {
 
+            selectEpisode(0, false);
 
-        const episodeToOpen =
-            savedEpisode >= 0
-                ? savedEpisode
-                : 0;
+        } else {
 
+            elements.episodeTitle.textContent =
+                "Chưa có tập nào";
 
-        selectEpisode(
-            episodeToOpen,
-            false
-        );
-
+        }
 
     } catch (error) {
 
         console.error(error);
 
-        elements.episodeLoading
-            .classList.add("hidden");
-
-
         elements.episodeTitle.textContent =
-            "Không thể tải danh sách tập.";
+            "Không thể tải danh sách tập";
 
+        showToast(
+            "Không thể tải dữ liệu tập truyện"
+        );
 
-        elements.episodeList.innerHTML = `
-            <div class="empty-state">
+    } finally {
 
-                <div class="error-icon">
-                    !
-                </div>
-
-                <p>
-                    ${escapeHtml(
-                        error.message
-                    )}
-                </p>
-
-            </div>
-        `;
+        elements.episodeLoading.classList.add(
+            "hidden"
+        );
 
     }
 
 }
 
 
-function renderEpisodes() {
+/*
+|--------------------------------------------------------------------------
+| LOAD EPISODES
+|--------------------------------------------------------------------------
+*/
 
-    elements.episodeList.innerHTML =
-        state.episodes
-            .map(
-                (episode, index) =>
-                    createEpisodeItem(
-                        episode,
-                        index
-                    )
-            )
-            .join("");
+async function loadBookEpisodes(book) {
+
+    /*
+     * Ưu tiên file JSON trên GitHub.
+     *
+     * Ví dụ:
+     *
+     * data/Audio1.json
+     */
+
+    const path =
+        `${GITHUB_DATA_PATH}/${encodeURIComponent(book.slug)}.json`;
+
+
+    const url =
+        githubRawUrl(path) +
+        `?t=${Date.now()}`;
+
+
+    const response =
+        await fetch(url, {
+            cache: "no-store"
+        });
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            `GitHub HTTP ${response.status}`
+        );
+
+    }
+
+
+    const data =
+        await response.json();
+
+
+    let episodes;
+
+
+    if (Array.isArray(data)) {
+
+        episodes = data;
+
+    } else if (
+        data &&
+        Array.isArray(data.episodes)
+    ) {
+
+        episodes = data.episodes;
+
+    } else {
+
+        throw new Error(
+            "File truyện không đúng định dạng"
+        );
+
+    }
+
+
+    episodes =
+        episodes.map(
+            normalizeEpisode
+        );
+
+
+    return {
+        episodes
+    };
 
 }
 
 
-function createEpisodeItem(
+/*
+|--------------------------------------------------------------------------
+| NORMALIZE EPISODE
+|--------------------------------------------------------------------------
+*/
+
+function normalizeEpisode(
     episode,
     index
 ) {
 
-    const progress =
-        readProgress(
-            state.currentFolder,
-            episode.name
-        );
-
-
     const number =
-        extractEpisodeNumber(
-            episode.name
+        Number(
+            episode.number ??
+            episode.episode ??
+            index + 1
         );
 
 
-    const displayNumber =
-        Number.isSafeInteger(number) &&
-        number !== Number.MAX_SAFE_INTEGER
-            ? String(number)
-            : String(index + 1);
+    const title =
+        String(
+            episode.title ??
+            episode.name ??
+            `Tập ${number}`
+        );
 
 
-    let progressText =
-        "";
+    /*
+     * key là đường dẫn trong R2.
+     *
+     * Ví dụ:
+     *
+     * Audio1/001.mp3
+     */
+
+    let key =
+        episode.key ??
+        episode.audioKey ??
+        episode.file ??
+        episode.path;
 
 
-    if (progress > 0) {
+    if (!key) {
 
-        progressText =
-            `Đã nghe ${formatTime(progress)}`;
-
-    } else {
-
-        progressText =
-            "Chưa nghe";
+        key =
+            `${currentBook.slug}/${String(number).padStart(3, "0")}.mp3`;
 
     }
 
 
-    return `
-        <button
-            type="button"
-            class="episode-item"
-            data-index="${index}"
-        >
+    key =
+        String(key)
+            .replace(/^\/+/, "");
 
-            <span class="episode-number">
-                ${escapeHtml(
-                    displayNumber
-                )}
-            </span>
 
-            <span class="episode-details">
+    /*
+     * Nếu JSON chỉ ghi:
+     *
+     * 001.mp3
+     *
+     * thì tự thêm tên truyện.
+     */
 
-                <span class="episode-name">
-                    ${escapeHtml(
-                        formatEpisodeName(
-                            episode.name
-                        )
-                    )}
-                </span>
+    if (
+        !key.includes("/")
+    ) {
 
-                <span class="episode-progress">
-                    ${escapeHtml(
-                        progressText
-                    )}
-                </span>
+        key =
+            `${currentBook.slug}/${key}`;
 
-            </span>
+    }
 
-        </button>
-    `;
+
+    return {
+
+        ...episode,
+
+        number,
+
+        title,
+
+        key,
+
+        audioUrl:
+            `${WORKER_URL}/audio/` +
+            encodeR2Key(key)
+
+    };
 
 }
 
 
-function findSavedEpisode() {
+/*
+|--------------------------------------------------------------------------
+| ENCODE R2 KEY
+|--------------------------------------------------------------------------
+*/
 
-    let bestIndex = -1;
+function encodeR2Key(key) {
 
-    let bestProgress = 0;
+    return key
+        .split("/")
+        .map(
+            part =>
+                encodeURIComponent(part)
+        )
+        .join("/");
+
+}
 
 
-    state.episodes.forEach(
+/*
+|--------------------------------------------------------------------------
+| RENDER EPISODES
+|--------------------------------------------------------------------------
+*/
+
+function renderEpisodes() {
+
+    elements.episodeList.innerHTML = "";
+
+    elements.episodeCount.textContent =
+        String(
+            currentEpisodes.length
+        );
+
+
+    if (
+        currentEpisodes.length === 0
+    ) {
+
+        elements.episodeList.innerHTML = `
+            <div class="episode-empty">
+                Chưa có tập nào.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    currentEpisodes.forEach(
         (episode, index) => {
 
-            const progress =
-                readProgress(
-                    state.currentFolder,
-                    episode.name
+            const item =
+                document.createElement("button");
+
+
+            item.type = "button";
+
+            item.className =
+                "episode-item";
+
+
+            /*
+             * Number
+             */
+
+            const number =
+                document.createElement("span");
+
+            number.className =
+                "episode-number";
+
+            number.textContent =
+                String(
+                    episode.number
                 );
 
 
-            if (
-                progress > bestProgress
-            ) {
+            /*
+             * Content
+             */
 
-                bestProgress =
-                    progress;
+            const content =
+                document.createElement("span");
 
-                bestIndex =
-                    index;
+            content.className =
+                "episode-content";
 
-            }
+
+            const title =
+                document.createElement("span");
+
+            title.className =
+                "episode-title";
+
+            title.textContent =
+                episode.title;
+
+
+            content.appendChild(
+                title
+            );
+
+
+            /*
+             * Play icon
+             */
+
+            const icon =
+                document.createElement("span");
+
+            icon.className =
+                "episode-play";
+
+            icon.textContent =
+                "▶";
+
+
+            item.appendChild(
+                number
+            );
+
+            item.appendChild(
+                content
+            );
+
+            item.appendChild(
+                icon
+            );
+
+
+            item.addEventListener(
+                "click",
+                () => {
+
+                    selectEpisode(
+                        index,
+                        true
+                    );
+
+                }
+            );
+
+
+            elements.episodeList.appendChild(
+                item
+            );
 
         }
     );
 
-
-    return bestIndex;
-
 }
 
 
-/* =========================================
-   SELECT EPISODE
-========================================= */
+/*
+|--------------------------------------------------------------------------
+| SELECT EPISODE
+|--------------------------------------------------------------------------
+*/
 
 function selectEpisode(
     index,
-    autoplay = true
+    autoplay = false
 ) {
 
     if (
         index < 0 ||
-        index >= state.episodes.length
+        index >= currentEpisodes.length
     ) {
         return;
     }
 
 
-    saveProgress();
-
-
-    state.currentEpisodeIndex =
+    currentEpisodeIndex =
         index;
 
 
     const episode =
-        state.episodes[index];
+        currentEpisodes[index];
 
 
     elements.episodeTitle.textContent =
-        formatEpisodeName(
-            episode.name
-        );
+        episode.title;
 
 
-    const rawUrl =
-        `${CONFIG.rawBase}/` +
-        `${CONFIG.owner}/` +
-        `${CONFIG.repo}/` +
-        `${CONFIG.branch}/` +
-        `${CONFIG.audioRoot}/` +
-        encodeURIComponent(
-            state.currentFolder
-        ) +
-        "/" +
-        encodeURIComponent(
-            episode.name
-        );
+    elements.audioPlayer.pause();
 
 
     elements.audioPlayer.src =
-        rawUrl;
+        episode.audioUrl;
 
 
     elements.audioPlayer.playbackRate =
@@ -1160,60 +1191,10 @@ function selectEpisode(
         );
 
 
-    updateEpisodeActiveState();
-
-
-    updateButtons();
-
-
     elements.audioPlayer.load();
 
 
-    elements.audioPlayer.addEventListener(
-        "loadedmetadata",
-        function restorePosition() {
-
-            elements.audioPlayer
-                .removeEventListener(
-                    "loadedmetadata",
-                    restorePosition
-                );
-
-
-            const saved =
-                readProgress(
-                    state.currentFolder,
-                    episode.name
-                );
-
-
-            if (
-                saved > 0 &&
-                Number.isFinite(
-                    elements.audioPlayer.duration
-                )
-            ) {
-
-                const max =
-                    elements.audioPlayer.duration;
-
-
-                elements.audioPlayer.currentTime =
-                    Math.min(
-                        saved,
-                        Math.max(
-                            0,
-                            max - 1
-                        )
-                    );
-
-            }
-
-
-            updateProgress();
-
-        }
-    );
+    updateEpisodeActiveState();
 
 
     if (autoplay) {
@@ -1228,13 +1209,14 @@ function selectEpisode(
                 "function"
         ) {
 
-            playPromise.catch(() => {
-
-                showToast(
-                    "Nhấn ▶ để bắt đầu phát."
-                );
-
-            });
+            playPromise.catch(
+                error => {
+                    console.warn(
+                        "Autoplay blocked:",
+                        error
+                    );
+                }
+            );
 
         }
 
@@ -1243,13 +1225,18 @@ function selectEpisode(
 }
 
 
+/*
+|--------------------------------------------------------------------------
+| ACTIVE EPISODE
+|--------------------------------------------------------------------------
+*/
+
 function updateEpisodeActiveState() {
 
     const items =
-        elements.episodeList
-            .querySelectorAll(
-                ".episode-item"
-            );
+        elements.episodeList.querySelectorAll(
+            ".episode-item"
+        );
 
 
     items.forEach(
@@ -1258,45 +1245,34 @@ function updateEpisodeActiveState() {
             item.classList.toggle(
                 "active",
                 index ===
-                    state.currentEpisodeIndex
+                    currentEpisodeIndex
             );
 
         }
     );
 
-
-    const active =
-        elements.episodeList
-            .querySelector(
-                ".episode-item.active"
-            );
-
-
-    if (active) {
-
-        active.scrollIntoView({
-            block: "nearest",
-            behavior: "smooth"
-        });
-
-    }
-
 }
 
 
-/* =========================================
-   AUDIO CONTROLS
-========================================= */
+/*
+|--------------------------------------------------------------------------
+| PLAY / PAUSE
+|--------------------------------------------------------------------------
+*/
 
 function togglePlay() {
 
-    if (!elements.audioPlayer.src) {
+    if (
+        !elements.audioPlayer.src
+    ) {
 
-        if (state.episodes.length > 0) {
+        if (
+            currentEpisodes.length > 0
+        ) {
 
             selectEpisode(
-                state.currentEpisodeIndex >= 0
-                    ? state.currentEpisodeIndex
+                currentEpisodeIndex >= 0
+                    ? currentEpisodeIndex
                     : 0,
                 true
             );
@@ -1304,6 +1280,7 @@ function togglePlay() {
         }
 
         return;
+
     }
 
 
@@ -1311,9 +1288,7 @@ function togglePlay() {
         elements.audioPlayer.paused
     ) {
 
-        elements.audioPlayer
-            .play()
-            .catch(() => {});
+        elements.audioPlayer.play();
 
     } else {
 
@@ -1324,105 +1299,87 @@ function togglePlay() {
 }
 
 
+/*
+|--------------------------------------------------------------------------
+| PREVIOUS
+|--------------------------------------------------------------------------
+*/
+
 function playPrevious() {
 
     if (
-        state.currentEpisodeIndex <= 0
-    ) {
-
-        showToast(
-            "Đây là tập đầu tiên."
-        );
-
-        return;
-
-    }
-
-
-    selectEpisode(
-        state.currentEpisodeIndex - 1,
-        true
-    );
-
-}
-
-
-function playNext() {
-
-    if (
-        state.currentEpisodeIndex >=
-        state.episodes.length - 1
-    ) {
-
-        showToast(
-            "Đã đến tập cuối."
-        );
-
-        return;
-
-    }
-
-
-    selectEpisode(
-        state.currentEpisodeIndex + 1,
-        true
-    );
-
-}
-
-
-function seekRelative(seconds) {
-
-    if (
-        !Number.isFinite(
-            elements.audioPlayer.duration
-        )
+        currentEpisodes.length === 0
     ) {
         return;
     }
 
 
-    elements.audioPlayer.currentTime =
-        Math.max(
-            0,
-            Math.min(
-                elements.audioPlayer.duration,
-                elements.audioPlayer.currentTime +
-                    seconds
-            )
-        );
-
-}
+    const previous =
+        currentEpisodeIndex - 1;
 
 
-function updatePlayButton() {
+    if (previous >= 0) {
 
-    if (
-        elements.audioPlayer.paused
-    ) {
-
-        elements.playButton.textContent =
-            "▶";
-
-        elements.playButton.setAttribute(
-            "aria-label",
-            "Phát"
+        selectEpisode(
+            previous,
+            true
         );
 
     } else {
 
-        elements.playButton.textContent =
-            "Ⅱ";
+        elements.audioPlayer.currentTime =
+            0;
 
-        elements.playButton.setAttribute(
-            "aria-label",
-            "Tạm dừng"
+    }
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| NEXT
+|--------------------------------------------------------------------------
+*/
+
+function playNext() {
+
+    if (
+        currentEpisodes.length === 0
+    ) {
+        return;
+    }
+
+
+    const next =
+        currentEpisodeIndex + 1;
+
+
+    if (
+        next <
+        currentEpisodes.length
+    ) {
+
+        selectEpisode(
+            next,
+            true
+        );
+
+    } else {
+
+        showToast(
+            "Đã hết các tập"
         );
 
     }
 
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| PROGRESS
+|--------------------------------------------------------------------------
+*/
 
 function updateProgress() {
 
@@ -1430,67 +1387,149 @@ function updateProgress() {
         elements.audioPlayer;
 
 
-    const current =
-        Number(player.currentTime) || 0;
+    if (
+        !Number.isFinite(
+            player.duration
+        ) ||
+        player.duration <= 0
+    ) {
+
+        return;
+
+    }
 
 
-    const duration =
-        Number(player.duration) || 0;
-
-
-    elements.currentTime.textContent =
-        formatTime(current);
-
-
-    elements.duration.textContent =
-        formatTime(duration);
+    const percentage =
+        (
+            player.currentTime /
+            player.duration
+        ) * 100;
 
 
     elements.progressBar.value =
-        duration > 0
-            ? (
-                current /
-                duration *
-                100
-            )
-            : 0;
+        percentage;
+
+
+    elements.currentTime.textContent =
+        formatTime(
+            player.currentTime
+        );
 
 }
 
 
-function updateButtons() {
+/*
+|--------------------------------------------------------------------------
+| DURATION
+|--------------------------------------------------------------------------
+*/
 
-    const index =
-        state.currentEpisodeIndex;
+function updateDuration() {
+
+    const duration =
+        elements.audioPlayer.duration;
 
 
-    elements.previousButton.disabled =
-        index <= 0;
+    if (
+        Number.isFinite(duration)
+    ) {
 
+        elements.duration.textContent =
+            formatTime(duration);
 
-    elements.nextButton.disabled =
-        index < 0 ||
-        index >=
-            state.episodes.length - 1;
+    }
 
 }
 
 
-/* =========================================
-   VIEWS
-========================================= */
+/*
+|--------------------------------------------------------------------------
+| TIME FORMAT
+|--------------------------------------------------------------------------
+*/
+
+function formatTime(seconds) {
+
+    if (
+        !Number.isFinite(seconds) ||
+        seconds < 0
+    ) {
+
+        return "00:00";
+
+    }
+
+
+    seconds =
+        Math.floor(seconds);
+
+
+    const hours =
+        Math.floor(
+            seconds / 3600
+        );
+
+
+    const minutes =
+        Math.floor(
+            (seconds % 3600) / 60
+        );
+
+
+    const secs =
+        seconds % 60;
+
+
+    if (hours > 0) {
+
+        return [
+            String(hours).padStart(2, "0"),
+            String(minutes).padStart(2, "0"),
+            String(secs).padStart(2, "0")
+        ].join(":");
+
+    }
+
+
+    return [
+        String(minutes).padStart(2, "0"),
+        String(secs).padStart(2, "0")
+    ].join(":");
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SEARCH
+|--------------------------------------------------------------------------
+*/
+
+function filterBooks() {
+
+    const hasSearch =
+        elements.searchInput.value.trim()
+            .length > 0;
+
+
+    elements.clearSearch.classList.toggle(
+        "hidden",
+        !hasSearch
+    );
+
+
+    renderBooks();
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SHOW LIBRARY
+|--------------------------------------------------------------------------
+*/
 
 function showLibrary() {
-
-    state.isPlayerMode = false;
-
-    state.currentFolder = null;
-
-    elements.playerView
-        .classList.add("hidden");
-
-    elements.libraryView
-        .classList.remove("hidden");
 
     elements.audioPlayer.pause();
 
@@ -1500,538 +1539,134 @@ function showLibrary() {
 
     elements.audioPlayer.load();
 
-    loadLibrary();
+
+    elements.playerView.classList.add(
+        "hidden"
+    );
+
+    elements.libraryView.classList.remove(
+        "hidden"
+    );
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 
 }
 
 
-function showPlayer() {
+/*
+|--------------------------------------------------------------------------
+| LOADING
+|--------------------------------------------------------------------------
+*/
 
-    elements.libraryView
-        .classList.add("hidden");
+function showLibraryLoading() {
 
-    elements.playerView
-        .classList.remove("hidden");
+    elements.libraryLoading.classList.remove(
+        "hidden"
+    );
+
+    elements.libraryError.classList.add(
+        "hidden"
+    );
+
+    elements.libraryEmpty.classList.add(
+        "hidden"
+    );
+
+    elements.folderList.classList.add(
+        "hidden"
+    );
 
 }
 
 
-/* =========================================
-   SECURITY HELPERS
-========================================= */
+/*
+|--------------------------------------------------------------------------
+| ERROR
+|--------------------------------------------------------------------------
+*/
 
-function escapeHtml(value) {
+function showLibraryError(message) {
 
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    elements.libraryLoading.classList.add(
+        "hidden"
+    );
+
+    elements.libraryError.classList.remove(
+        "hidden"
+    );
+
+    elements.libraryEmpty.classList.add(
+        "hidden"
+    );
+
+    elements.folderList.classList.add(
+        "hidden"
+    );
+
+
+    elements.libraryErrorText.textContent =
+        message ||
+        "Không thể tải dữ liệu từ GitHub.";
 
 }
 
 
-function escapeAttribute(value) {
+/*
+|--------------------------------------------------------------------------
+| LOADED
+|--------------------------------------------------------------------------
+*/
 
-    return escapeHtml(value)
-        .replaceAll("`", "&#096;");
+function showLibraryLoaded() {
+
+    elements.libraryLoading.classList.add(
+        "hidden"
+    );
+
+    elements.libraryError.classList.add(
+        "hidden"
+    );
 
 }
 
 
-/* =========================================
-   ROUTER
-========================================= */
+/*
+|--------------------------------------------------------------------------
+| TOAST
+|--------------------------------------------------------------------------
+*/
 
-function route() {
+function showToast(message) {
 
-    const folder =
-        getFolderFromPath();
-
-
-    if (folder) {
-
-        showPlayer();
-
-        loadPlayer(folder);
-
-    } else {
-
-        showLibrary();
-
-    }
-
-}
+    elements.toast.textContent =
+        message;
 
 
-/* =========================================
-   EVENTS
-========================================= */
+    elements.toast.classList.add(
+        "show"
+    );
 
-elements.folderList
-    .addEventListener(
-        "click",
-        event => {
 
-            const card =
-                event.target.closest(
-                    ".folder-card"
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            () => {
+
+                elements.toast.classList.remove(
+                    "show"
                 );
 
-
-            if (!card) {
-                return;
-            }
-
-
-            const folder =
-                card.dataset.folder;
-
-
-            if (folder) {
-
-                navigateToFolder(
-                    folder
-                );
-
-            }
-
-        }
-    );
-
-
-elements.folderList
-    .addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key !== "Enter" &&
-                event.key !== " "
-            ) {
-                return;
-            }
-
-
-            const card =
-                event.target.closest(
-                    ".folder-card"
-                );
-
-
-            if (!card) {
-                return;
-            }
-
-
-            event.preventDefault();
-
-
-            const folder =
-                card.dataset.folder;
-
-
-            if (folder) {
-
-                navigateToFolder(
-                    folder
-                );
-
-            }
-
-        }
-    );
-
-
-elements.episodeList
-    .addEventListener(
-        "click",
-        event => {
-
-            const item =
-                event.target.closest(
-                    ".episode-item"
-                );
-
-
-            if (!item) {
-                return;
-            }
-
-
-            const index =
-                Number(
-                    item.dataset.index
-                );
-
-
-            selectEpisode(
-                index,
-                true
-            );
-
-        }
-    );
-
-
-elements.playButton
-    .addEventListener(
-        "click",
-        togglePlay
-    );
-
-
-elements.previousButton
-    .addEventListener(
-        "click",
-        playPrevious
-    );
-
-
-elements.nextButton
-    .addEventListener(
-        "click",
-        playNext
-    );
-
-
-elements.rewindButton
-    .addEventListener(
-        "click",
-        () => seekRelative(-10)
-    );
-
-
-elements.forwardButton
-    .addEventListener(
-        "click",
-        () => seekRelative(30)
-    );
-
-
-elements.audioPlayer
-    .addEventListener(
-        "play",
-        updatePlayButton
-    );
-
-
-elements.audioPlayer
-    .addEventListener(
-        "pause",
-        updatePlayButton
-    );
-
-
-elements.audioPlayer
-    .addEventListener(
-        "timeupdate",
-        () => {
-
-            updateProgress();
-
-            /*
-             * Lưu vị trí định kỳ.
-             * Không ghi localStorage
-             * ở mỗi frame.
-             */
-            if (
-                Math.floor(
-                    elements.audioPlayer.currentTime
-                ) % 5 === 0
-            ) {
-
-                saveProgress();
-
-            }
-
-        }
-    );
-
-
-elements.audioPlayer
-    .addEventListener(
-        "loadedmetadata",
-        updateProgress
-    );
-
-
-elements.audioPlayer
-    .addEventListener(
-        "ended",
-        () => {
-
-            saveProgress();
-
-            playNext();
-
-        }
-    );
-
-
-elements.progressBar
-    .addEventListener(
-        "input",
-        () => {
-
-            const duration =
-                elements.audioPlayer.duration;
-
-
-            if (
-                !Number.isFinite(duration) ||
-                duration <= 0
-            ) {
-                return;
-            }
-
-
-            elements.audioPlayer.currentTime =
-                (
-                    Number(
-                        elements.progressBar.value
-                    ) / 100
-                ) * duration;
-
-        }
-    );
-
-
-elements.audioPlayer
-    .addEventListener(
-        "error",
-        () => {
-
-            showToast(
-                "Không thể phát file audio này."
-            );
-
-        }
-    );
-
-
-elements.speedSelect
-    .addEventListener(
-        "change",
-        () => {
-
-            elements.audioPlayer.playbackRate =
-                Number(
-                    elements.speedSelect.value
-                );
-
-
-            try {
-
-                localStorage.setItem(
-                    "audio-playback-speed",
-                    elements.speedSelect.value
-                );
-
-            } catch (_) {}
-
-        }
-    );
-
-
-elements.searchInput
-    .addEventListener(
-        "input",
-        filterFolders
-    );
-
-
-elements.clearSearch
-    .addEventListener(
-        "click",
-        () => {
-
-            elements.searchInput.value =
-                "";
-
-            filterFolders();
-
-            elements.searchInput.focus();
-
-        }
-    );
-
-
-elements.refreshButton
-    .addEventListener(
-        "click",
-        () => {
-
-            if (state.isPlayerMode) {
-
-                if (
-                    state.currentFolder
-                ) {
-
-                    loadPlayer(
-                        state.currentFolder
-                    );
-
-                }
-
-            } else {
-
-                loadLibrary();
-
-            }
-
-        }
-    );
-
-
-elements.retryButton
-    .addEventListener(
-        "click",
-        loadLibrary
-    );
-
-
-elements.backButton
-    .addEventListener(
-        "click",
-        navigateToLibrary
-    );
-
-
-window.addEventListener(
-    "popstate",
-    route
-);
-
-
-window.addEventListener(
-    "beforeunload",
-    saveProgress
-);
-
-
-/* =========================================
-   KEYBOARD SHORTCUTS
-========================================= */
-
-document.addEventListener(
-    "keydown",
-    event => {
-
-        /*
-         * Không bắt phím khi người dùng
-         * đang nhập text.
-         */
-
-        const tag =
-            document.activeElement?.tagName;
-
-
-        if (
-            tag === "INPUT" ||
-            tag === "TEXTAREA" ||
-            tag === "SELECT"
-        ) {
-            return;
-        }
-
-
-        if (!state.isPlayerMode) {
-            return;
-        }
-
-
-        switch (event.key) {
-
-            case " ":
-
-                event.preventDefault();
-
-                togglePlay();
-
-                break;
-
-
-            case "ArrowLeft":
-
-                event.preventDefault();
-
-                seekRelative(-10);
-
-                break;
-
-
-            case "ArrowRight":
-
-                event.preventDefault();
-
-                seekRelative(30);
-
-                break;
-
-
-            case "ArrowUp":
-
-                event.preventDefault();
-
-                playPrevious();
-
-                break;
-
-
-            case "ArrowDown":
-
-                event.preventDefault();
-
-                playNext();
-
-                break;
-
-        }
-
-    }
-);
-
-
-/* =========================================
-   RESTORE SPEED
-========================================= */
-
-try {
-
-    const savedSpeed =
-        localStorage.getItem(
-            "audio-playback-speed"
+            },
+            2500
         );
 
-
-    if (savedSpeed) {
-
-        const speed =
-            Number(savedSpeed);
-
-
-        if (
-            Number.isFinite(speed) &&
-            speed > 0
-        ) {
-
-            elements.speedSelect.value =
-                String(speed);
-
-            elements.audioPlayer.playbackRate =
-                speed;
-
-        }
-
-    }
-
-} catch (_) {}
-
-
-/* =========================================
-   START
-========================================= */
-
-route();
+}
