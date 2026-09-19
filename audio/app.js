@@ -1,10 +1,10 @@
-const WORKER_URL = "https://audio.thnhan.dev";
+const WORKER_URL = "https://audio.tnhan.dev";
 
 const state = {
     books: [],
+    filteredBooks: [],
     currentBook: null,
     currentEpisodeIndex: -1,
-    filteredBooks: [],
     isLoading: false
 };
 
@@ -46,9 +46,9 @@ const els = {
 };
 
 
-// ================================
+// ======================================================
 // INIT
-// ================================
+// ======================================================
 
 document.addEventListener("DOMContentLoaded", () => {
     setupEvents();
@@ -56,15 +56,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// ================================
+// ======================================================
 // API
-// ================================
+// ======================================================
 
 async function apiFetch(path) {
     const response = await fetch(`${WORKER_URL}${path}`, {
         method: "GET",
         headers: {
-            "Accept": "application/json"
+            Accept: "application/json"
         },
         cache: "no-store"
     });
@@ -83,9 +83,9 @@ async function apiFetch(path) {
 }
 
 
-// ================================
+// ======================================================
 // LOAD BOOKS
-// ================================
+// ======================================================
 
 async function loadBooks() {
     if (state.isLoading) return;
@@ -97,7 +97,13 @@ async function loadBooks() {
     try {
         const data = await apiFetch("/api/books");
 
-        state.books = normalizeBooks(data);
+        if (!Array.isArray(data.books)) {
+            throw new Error(
+                "API /api/books không trả về danh sách books."
+            );
+        }
+
+        state.books = data.books.map(normalizeBook);
         state.filteredBooks = [...state.books];
 
         renderBooks();
@@ -122,9 +128,9 @@ async function loadBooks() {
 }
 
 
-// ================================
+// ======================================================
 // LOAD BOOK DETAIL
-// ================================
+// ======================================================
 
 async function loadBook(book) {
     try {
@@ -137,15 +143,15 @@ async function loadBook(book) {
         );
 
         if (!data.book) {
-            throw new Error("API không trả về thông tin truyện.");
+            throw new Error(
+                "API không trả về thông tin truyện."
+            );
         }
 
         state.currentBook = normalizeBook(data.book);
-
         state.currentEpisodeIndex = -1;
 
         renderPlayer();
-
         showPlayer();
 
     } catch (error) {
@@ -158,40 +164,31 @@ async function loadBook(book) {
 }
 
 
-// ================================
-// NORMALIZE BOOKS
-// ================================
-
-function normalizeBooks(data) {
-    if (Array.isArray(data)) {
-        return data.map(normalizeBook);
-    }
-
-    if (Array.isArray(data.books)) {
-        return data.books.map(normalizeBook);
-    }
-
-    if (data.book) {
-        return [normalizeBook(data.book)];
-    }
-
-    return [];
-}
-
+// ======================================================
+// NORMALIZE BOOK
+// ======================================================
 
 function normalizeBook(book) {
     return {
         id: book.id || book.slug || "",
         slug: book.slug || book.id || "",
-        name: book.name || book.title || book.slug || "Không tên",
+        name:
+            book.name ||
+            book.title ||
+            book.slug ||
+            "Không tên",
+
         author: book.author || "",
         description: book.description || "",
         cover: book.cover || book.coverUrl || "",
+        path: book.path || "",
+
         episodeCount:
             Number(book.episodeCount) ||
             (Array.isArray(book.episodes)
                 ? book.episodes.length
                 : 0),
+
         episodes: Array.isArray(book.episodes)
             ? book.episodes.map(normalizeEpisode)
             : []
@@ -199,43 +196,56 @@ function normalizeBook(book) {
 }
 
 
-// ================================
+// ======================================================
 // NORMALIZE EPISODE
-// ================================
+// ======================================================
 
 function normalizeEpisode(episode, index = 0) {
+    const key =
+        episode.key ||
+        episode.id ||
+        "";
+
     return {
-        id: episode.id || episode.key || `${index + 1}`,
-        key: episode.key || episode.id || "",
+        id:
+            episode.id ||
+            key ||
+            `${index + 1}`,
+
+        key,
+
         title:
             episode.title ||
             `Tập ${episode.number || index + 1}`,
+
         filename:
             episode.filename ||
-            getFilename(episode.key || episode.id || ""),
+            getFilename(key),
+
         number:
             Number(episode.number) ||
             extractEpisodeNumber(
                 episode.filename ||
-                episode.key ||
-                episode.id ||
-                ""
+                key
             ) ||
             index + 1,
-        size: Number(episode.size) || 0,
-        uploaded: episode.uploaded || "",
+
+        size:
+            Number(episode.size) || 0,
+
+        uploaded:
+            episode.uploaded || "",
+
         audioUrl:
             episode.audioUrl ||
-            buildAudioUrl(
-                episode.key || episode.id || ""
-            )
+            buildAudioUrl(key)
     };
 }
 
 
-// ================================
+// ======================================================
 // AUDIO URL
-// ================================
+// ======================================================
 
 function buildAudioUrl(key) {
     if (!key) return "";
@@ -249,9 +259,9 @@ function buildAudioUrl(key) {
 }
 
 
-// ================================
-// RENDER BOOK LIST
-// ================================
+// ======================================================
+// RENDER BOOKS
+// ======================================================
 
 function renderBooks() {
     if (!els.folderList) return;
@@ -282,9 +292,11 @@ function renderBooks() {
 
                 <div class="folder-meta">
                     ${book.episodeCount || 0} tập
-                    ${book.author
-                        ? ` • ${escapeHtml(book.author)}`
-                        : ""}
+                    ${
+                        book.author
+                            ? ` • ${escapeHtml(book.author)}`
+                            : ""
+                    }
                 </div>
 
                 ${
@@ -312,9 +324,9 @@ function renderBooks() {
 }
 
 
-// ================================
+// ======================================================
 // PLAYER
-// ================================
+// ======================================================
 
 function renderPlayer() {
     const book = state.currentBook;
@@ -330,23 +342,37 @@ function renderPlayer() {
             `${book.episodes.length} tập`;
     }
 
+    if (els.episodeTitle) {
+        els.episodeTitle.textContent =
+            "Chọn một tập để bắt đầu";
+    }
+
     renderEpisodeList();
 }
 
+
+// ======================================================
+// EPISODE LIST
+// ======================================================
 
 function renderEpisodeList() {
     if (!els.episodeList) return;
 
     els.episodeList.innerHTML = "";
 
-    const episodes = state.currentBook?.episodes || [];
+    const episodes =
+        state.currentBook?.episodes || [];
 
     episodes.forEach((episode, index) => {
-        const item = document.createElement("div");
+        const item =
+            document.createElement("div");
 
         item.className = "episode-item";
 
-        if (index === state.currentEpisodeIndex) {
+        if (
+            index ===
+            state.currentEpisodeIndex
+        ) {
             item.classList.add("active");
         }
 
@@ -379,56 +405,72 @@ function renderEpisodeList() {
 }
 
 
-// ================================
+// ======================================================
 // PLAY EPISODE
-// ================================
+// ======================================================
 
 function playEpisode(index) {
     const book = state.currentBook;
 
-    if (!book || !book.episodes[index]) {
-        return;
-    }
+    if (!book) return;
 
-    const episode = book.episodes[index];
+    const episode =
+        book.episodes[index];
 
-    state.currentEpisodeIndex = index;
+    if (!episode) return;
 
     const audioUrl =
         episode.audioUrl ||
         buildAudioUrl(episode.key);
 
     if (!audioUrl) {
-        showToast("Không tìm thấy URL audio.");
+        showToast(
+            "Không tìm thấy URL audio."
+        );
+
         return;
     }
 
+    state.currentEpisodeIndex = index;
+
     els.audioPlayer.src = audioUrl;
+
+    els.audioPlayer.load();
 
     if (els.episodeTitle) {
         els.episodeTitle.textContent =
             episode.title;
     }
 
-    els.audioPlayer.play()
+    renderEpisodeList();
+
+    els.audioPlayer
+        .play()
         .then(() => {
             updatePlayButton();
         })
         .catch(error => {
-            console.error("Play error:", error);
-            updatePlayButton();
-        });
+            console.error(
+                "Play error:",
+                error
+            );
 
-    renderEpisodeList();
+            updatePlayButton();
+
+            showToast(
+                "Trình duyệt chặn tự động phát. Hãy bấm Play."
+            );
+        });
 }
 
 
-// ================================
+// ======================================================
 // NEXT / PREVIOUS
-// ================================
+// ======================================================
 
 function playNext() {
-    const episodes = state.currentBook?.episodes || [];
+    const episodes =
+        state.currentBook?.episodes || [];
 
     if (episodes.length === 0) return;
 
@@ -445,7 +487,8 @@ function playNext() {
 
 
 function playPrevious() {
-    const episodes = state.currentBook?.episodes || [];
+    const episodes =
+        state.currentBook?.episodes || [];
 
     if (episodes.length === 0) return;
 
@@ -460,18 +503,19 @@ function playPrevious() {
 }
 
 
-// ================================
+// ======================================================
 // SEARCH
-// ================================
+// ======================================================
 
 function filterBooks(keyword) {
     const query =
-        keyword
+        String(keyword || "")
             .trim()
             .toLowerCase();
 
     if (!query) {
-        state.filteredBooks = [...state.books];
+        state.filteredBooks =
+            [...state.books];
     } else {
         state.filteredBooks =
             state.books.filter(book => {
@@ -492,9 +536,9 @@ function filterBooks(keyword) {
 }
 
 
-// ================================
+// ======================================================
 // EVENTS
-// ================================
+// ======================================================
 
 function setupEvents() {
 
@@ -502,7 +546,9 @@ function setupEvents() {
     els.searchInput?.addEventListener(
         "input",
         event => {
-            filterBooks(event.target.value);
+            filterBooks(
+                event.target.value
+            );
         }
     );
 
@@ -532,7 +578,7 @@ function setupEvents() {
             if (!els.audioPlayer.src) {
                 if (
                     state.currentBook &&
-                    state.currentBook.episodes.length > 0
+                    state.currentBook.episodes.length
                 ) {
                     playEpisode(0);
                 }
@@ -552,22 +598,18 @@ function setupEvents() {
     // Previous
     els.prevBtn?.addEventListener(
         "click",
-        () => {
-            playPrevious();
-        }
+        playPrevious
     );
 
 
     // Next
     els.nextBtn?.addEventListener(
         "click",
-        () => {
-            playNext();
-        }
+        playNext
     );
 
 
-    // Rewind
+    // Rewind 10 seconds
     els.rewindBtn?.addEventListener(
         "click",
         () => {
@@ -580,13 +622,21 @@ function setupEvents() {
     );
 
 
-    // Forward
+    // Forward 30 seconds
     els.forwardBtn?.addEventListener(
         "click",
         () => {
+            if (
+                !Number.isFinite(
+                    els.audioPlayer.duration
+                )
+            ) {
+                return;
+            }
+
             els.audioPlayer.currentTime =
                 Math.min(
-                    els.audioPlayer.duration || Infinity,
+                    els.audioPlayer.duration,
                     els.audioPlayer.currentTime + 30
                 );
         }
@@ -603,34 +653,42 @@ function setupEvents() {
     );
 
 
-    // Audio events
+    // Audio play
     els.audioPlayer?.addEventListener(
         "play",
         updatePlayButton
     );
 
+
+    // Audio pause
     els.audioPlayer?.addEventListener(
         "pause",
         updatePlayButton
     );
 
+
+    // Progress
     els.audioPlayer?.addEventListener(
         "timeupdate",
         updateProgress
     );
 
+
+    // Metadata
     els.audioPlayer?.addEventListener(
         "loadedmetadata",
         updateDuration
     );
 
+
+    // End → next episode
     els.audioPlayer?.addEventListener(
         "ended",
-        () => {
-            playNext();
-        }
+        playNext
     );
 
+
+    // Audio error
     els.audioPlayer?.addEventListener(
         "error",
         event => {
@@ -646,11 +704,17 @@ function setupEvents() {
     );
 
 
-    // Progress seek
+    // Seek
     els.progressBar?.addEventListener(
         "input",
         event => {
-            if (!els.audioPlayer.duration) {
+            const duration =
+                els.audioPlayer.duration;
+
+            if (
+                !Number.isFinite(duration) ||
+                duration <= 0
+            ) {
                 return;
             }
 
@@ -658,16 +722,15 @@ function setupEvents() {
                 Number(event.target.value);
 
             els.audioPlayer.currentTime =
-                (percent / 100) *
-                els.audioPlayer.duration;
+                (percent / 100) * duration;
         }
     );
 }
 
 
-// ================================
-// UI
-// ================================
+// ======================================================
+// UI STATE
+// ======================================================
 
 function showLibrary() {
     if (els.libraryView) {
@@ -777,9 +840,9 @@ function hideStates() {
 }
 
 
-// ================================
+// ======================================================
 // AUDIO UI
-// ================================
+// ======================================================
 
 function updatePlayButton() {
     if (!els.playBtn) return;
@@ -807,7 +870,11 @@ function updateProgress() {
             formatTime(current);
     }
 
-    if (els.progressBar && duration > 0) {
+    if (
+        els.progressBar &&
+        Number.isFinite(duration) &&
+        duration > 0
+    ) {
         els.progressBar.value =
             (current / duration) * 100;
     }
@@ -817,20 +884,21 @@ function updateProgress() {
 function updateDuration() {
     if (!els.audioPlayer) return;
 
+    const duration =
+        els.audioPlayer.duration;
+
     if (els.duration) {
         els.duration.textContent =
-            formatTime(
-                els.audioPlayer.duration
-            );
+            formatTime(duration);
     }
 
     updateProgress();
 }
 
 
-// ================================
+// ======================================================
 // TOAST
-// ================================
+// ======================================================
 
 let toastTimer = null;
 
@@ -838,6 +906,7 @@ function showToast(message) {
     if (!els.toast) return;
 
     els.toast.textContent = message;
+
     els.toast.classList.add("show");
 
     clearTimeout(toastTimer);
@@ -848,25 +917,25 @@ function showToast(message) {
 }
 
 
-// ================================
+// ======================================================
 // HELPERS
-// ================================
+// ======================================================
 
 function formatTime(seconds) {
     if (!Number.isFinite(seconds)) {
         return "00:00";
     }
 
-    seconds = Math.max(
-        0,
-        Math.floor(seconds)
-    );
+    seconds =
+        Math.max(0, Math.floor(seconds));
 
     const hours =
         Math.floor(seconds / 3600);
 
     const minutes =
-        Math.floor((seconds % 3600) / 60);
+        Math.floor(
+            (seconds % 3600) / 60
+        );
 
     const secs =
         seconds % 60;
