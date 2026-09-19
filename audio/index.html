@@ -2,6 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0, viewport-fit=cover"
@@ -51,13 +52,15 @@
     <!-- Main -->
     <main class="container">
 
-        <!-- Library view -->
+        <!-- Library -->
         <section id="libraryView">
 
             <div class="page-heading">
                 <div>
                     <span class="eyebrow">THƯ VIỆN</span>
+
                     <h1>Danh sách truyện</h1>
+
                     <p id="libraryDescription">
                         Đang tải dữ liệu từ GitHub...
                     </p>
@@ -129,8 +132,7 @@
                 <h2>Chưa có truyện</h2>
 
                 <p>
-                    Hãy tạo folder truyện bên trong thư mục
-                    <code>audio/</code>.
+                    Chưa có truyện nào trong thư viện.
                 </p>
 
             </div>
@@ -145,7 +147,7 @@
         </section>
 
 
-        <!-- Player view -->
+        <!-- Player -->
         <section
             id="playerView"
             class="player-view hidden"
@@ -167,11 +169,8 @@
                 <div class="player-card">
 
                     <div class="player-cover">
-
                         <div class="cover-decoration"></div>
-
                         <span>🎧</span>
-
                     </div>
 
 
@@ -283,6 +282,7 @@
 
                         </label>
 
+
                         <button
                             id="rewindButton"
                             class="small-button"
@@ -290,6 +290,7 @@
                         >
                             ↶ 10s
                         </button>
+
 
                         <button
                             id="forwardButton"
@@ -304,7 +305,7 @@
                 </div>
 
 
-                <!-- Episode list -->
+                <!-- Episodes -->
                 <aside class="episodes-card">
 
                     <div class="episodes-header">
