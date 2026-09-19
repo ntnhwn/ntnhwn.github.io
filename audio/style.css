@@ -4,18 +4,20 @@
     --card: #151922;
     --card-hover: #1b202b;
 
-    --text: #f5f7fb;
-    --text-soft: #a7afbf;
-    --text-muted: #737d90;
-
     --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.14);
 
-    --accent: #7c5cff;
-    --accent-light: #9a82ff;
+    --text: #f5f7fa;
+    --text-soft: #a7adba;
+    --text-muted: #737b89;
 
-    --danger: #ff5f6d;
+    --accent: #8b5cf6;
+    --accent-light: #a78bfa;
+
+    --danger: #ef4444;
 
     --radius: 18px;
+    --radius-small: 12px;
 
     --shadow:
         0 20px 60px rgba(0, 0, 0, 0.35);
@@ -39,14 +41,9 @@ body {
 
     background:
         radial-gradient(
-            circle at 10% 0%,
-            rgba(124, 92, 255, 0.12),
-            transparent 30%
-        ),
-        radial-gradient(
-            circle at 90% 10%,
-            rgba(55, 180, 255, 0.08),
-            transparent 30%
+            circle at top left,
+            rgba(139, 92, 246, 0.10),
+            transparent 35%
         ),
         var(--bg);
 
@@ -54,6 +51,7 @@ body {
 
     font-family:
         Inter,
+        ui-sans-serif,
         system-ui,
         -apple-system,
         BlinkMacSystemFont,
@@ -74,33 +72,40 @@ button {
 }
 
 
-a {
-    color: inherit;
-    text-decoration: none;
-}
-
-
 .hidden {
     display: none !important;
 }
 
 
-/* =========================================
+/* =========================================================
+   APP
+========================================================= */
+
+.app {
+    min-height: 100vh;
+}
+
+
+/* =========================================================
    TOPBAR
-========================================= */
+========================================================= */
 
 .topbar {
     position: sticky;
-
     top: 0;
+    z-index: 100;
 
-    z-index: 50;
+    background:
+        rgba(11, 13, 18, 0.78);
 
-    backdrop-filter: blur(18px);
+    backdrop-filter:
+        blur(18px);
 
-    background: rgba(11, 13, 18, 0.78);
+    -webkit-backdrop-filter:
+        blur(18px);
 
-    border-bottom: 1px solid var(--border);
+    border-bottom:
+        1px solid var(--border);
 }
 
 
@@ -109,7 +114,7 @@ a {
 
     min-height: 72px;
 
-    margin: auto;
+    margin: 0 auto;
 
     display: flex;
 
@@ -120,11 +125,15 @@ a {
 
 
 .brand {
-    display: inline-flex;
+    display: flex;
 
     align-items: center;
 
     gap: 12px;
+
+    color: var(--text);
+
+    text-decoration: none;
 }
 
 
@@ -139,15 +148,12 @@ a {
     border-radius: 13px;
 
     background:
-        linear-gradient(
-            135deg,
-            rgba(124, 92, 255, 0.3),
-            rgba(124, 92, 255, 0.08)
-        );
+        rgba(139, 92, 246, 0.15);
 
-    border: 1px solid rgba(124, 92, 255, 0.25);
+    border:
+        1px solid rgba(139, 92, 246, 0.22);
 
-    font-size: 21px;
+    font-size: 20px;
 }
 
 
@@ -175,41 +181,56 @@ a {
     width: 42px;
     height: 42px;
 
+    display: grid;
+
+    place-items: center;
+
     border: 1px solid var(--border);
 
     border-radius: 12px;
 
     background: var(--card);
 
+    color: var(--text-soft);
+
     cursor: pointer;
 
-    font-size: 22px;
+    font-size: 20px;
 
     transition:
-        transform 0.2s,
-        background 0.2s;
+        background 0.2s,
+        border-color 0.2s,
+        transform 0.2s;
 }
 
 
 .icon-button:hover {
     background: var(--card-hover);
 
+    border-color:
+        var(--border-strong);
+
     transform: rotate(25deg);
 }
 
 
-/* =========================================
+/* =========================================================
    CONTAINER
-========================================= */
+========================================================= */
 
 .container {
     width: min(1180px, calc(100% - 32px));
 
     margin: 0 auto;
 
-    padding: 56px 0 80px;
+    padding:
+        48px 0 80px;
 }
 
+
+/* =========================================================
+   HEADING
+========================================================= */
 
 .page-heading {
     margin-bottom: 28px;
@@ -225,72 +246,85 @@ a {
 
     font-size: 11px;
 
-    font-weight: 800;
+    font-weight: 700;
 
-    letter-spacing: 0.15em;
-}
-
-
-h1,
-h2,
-p {
-    margin-top: 0;
+    letter-spacing: 0.12em;
 }
 
 
 .page-heading h1 {
-    margin-bottom: 8px;
+    margin: 0;
 
-    font-size: clamp(30px, 5vw, 46px);
+    font-size:
+        clamp(28px, 4vw, 42px);
 
-    line-height: 1.05;
+    line-height: 1.1;
 
-    letter-spacing: -0.04em;
+    letter-spacing: -0.035em;
 }
 
 
 .page-heading p {
-    margin: 0;
+    margin:
+        10px 0 0;
 
-    color: var(--text-soft);
+    color: var(--text-muted);
 
-    font-size: 15px;
+    font-size: 14px;
 }
 
 
-/* =========================================
+/* =========================================================
    SEARCH
-========================================= */
+========================================================= */
 
 .search-box {
     position: relative;
 
+    display: flex;
+
+    align-items: center;
+
     margin-bottom: 30px;
+}
+
+
+.search-icon {
+    position: absolute;
+
+    left: 16px;
+
+    color: var(--text-muted);
+
+    font-size: 22px;
+
+    pointer-events: none;
 }
 
 
 .search-box input {
     width: 100%;
 
-    height: 54px;
+    height: 52px;
 
     padding:
-        0 50px
-        0 48px;
+        0 46px;
 
-    border: 1px solid var(--border);
+    border:
+        1px solid var(--border);
 
-    border-radius: 15px;
+    border-radius: 14px;
 
     outline: none;
 
-    background: var(--card);
+    background:
+        rgba(255, 255, 255, 0.035);
 
     color: var(--text);
 
     transition:
         border-color 0.2s,
-        box-shadow 0.2s;
+        background 0.2s;
 }
 
 
@@ -300,98 +334,77 @@ p {
 
 
 .search-box input:focus {
-    border-color: rgba(124, 92, 255, 0.6);
+    background:
+        rgba(255, 255, 255, 0.05);
 
-    box-shadow:
-        0 0 0 4px rgba(124, 92, 255, 0.08);
-}
-
-
-.search-icon {
-    position: absolute;
-
-    left: 18px;
-
-    top: 50%;
-
-    transform: translateY(-50%);
-
-    color: var(--text-muted);
-
-    font-size: 25px;
-
-    pointer-events: none;
+    border-color:
+        rgba(139, 92, 246, 0.6);
 }
 
 
 .clear-search {
     position: absolute;
 
-    right: 12px;
+    right: 10px;
 
-    top: 50%;
-
-    transform: translateY(-50%);
-
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
 
     border: 0;
 
-    border-radius: 9px;
+    border-radius: 10px;
 
-    background: transparent;
+    background:
+        rgba(255, 255, 255, 0.06);
 
-    color: var(--text-muted);
+    color: var(--text-soft);
 
     cursor: pointer;
 
-    font-size: 22px;
+    font-size: 20px;
 }
 
 
-.clear-search:hover {
-    background: rgba(255, 255, 255, 0.06);
-
-    color: var(--text);
-}
-
-
-/* =========================================
-   FOLDER GRID
-========================================= */
+/* =========================================================
+   BOOK GRID
+========================================================= */
 
 .folder-grid {
     display: grid;
 
     grid-template-columns:
-        repeat(
-            auto-fill,
-            minmax(250px, 1fr)
-        );
+        repeat(3, minmax(0, 1fr));
 
     gap: 16px;
 }
 
 
-.folder-card {
+.book-card {
     position: relative;
+
+    min-width: 0;
 
     display: flex;
 
     align-items: center;
 
-    gap: 16px;
+    gap: 15px;
 
-    min-height: 104px;
+    padding: 14px;
 
-    padding: 18px;
-
-    border: 1px solid var(--border);
+    border:
+        1px solid var(--border);
 
     border-radius: var(--radius);
 
-    background: var(--card);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.045),
+            rgba(255,255,255,0.018)
+        );
+
+    text-align: left;
 
     cursor: pointer;
 
@@ -400,76 +413,80 @@ p {
     transition:
         transform 0.2s,
         background 0.2s,
-        border-color 0.2s;
+        border-color 0.2s,
+        box-shadow 0.2s;
 }
 
 
-.folder-card::after {
-    content: "";
-
-    position: absolute;
-
-    width: 100px;
-    height: 100px;
-
-    right: -50px;
-    top: -50px;
-
-    border-radius: 50%;
-
-    background: rgba(124, 92, 255, 0.12);
-}
-
-
-.folder-card:hover {
+.book-card:hover {
     transform: translateY(-3px);
 
-    background: var(--card-hover);
+    background:
+        var(--card-hover);
 
     border-color:
-        rgba(124, 92, 255, 0.35);
+        rgba(139, 92, 246, 0.28);
+
+    box-shadow:
+        var(--shadow);
 }
 
 
-.folder-icon {
-    flex: 0 0 auto;
+.book-cover {
+    flex: 0 0 64px;
 
-    width: 56px;
-    height: 56px;
+    width: 64px;
+    height: 76px;
 
     display: grid;
 
     place-items: center;
 
-    border-radius: 16px;
+    overflow: hidden;
+
+    border-radius: 12px;
 
     background:
-        rgba(124, 92, 255, 0.12);
+        linear-gradient(
+            145deg,
+            rgba(139, 92, 246, 0.3),
+            rgba(139, 92, 246, 0.08)
+        );
 
-    border: 1px solid
-        rgba(124, 92, 255, 0.2);
+    border:
+        1px solid rgba(139, 92, 246, 0.2);
 
-    font-size: 25px;
+    font-size: 26px;
 }
 
 
-.folder-content {
+.book-cover img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+.book-card-content {
     min-width: 0;
 
-    position: relative;
-
-    z-index: 1;
+    flex: 1;
 }
 
 
-.folder-name {
-    margin: 0 0 5px;
-
-    font-size: 16px;
-
-    font-weight: 700;
+.book-card-content h2 {
+    margin: 0;
 
     overflow: hidden;
+
+    color: var(--text);
+
+    font-size: 15px;
+
+    font-weight: 650;
+
+    line-height: 1.35;
 
     text-overflow: ellipsis;
 
@@ -477,23 +494,46 @@ p {
 }
 
 
-.folder-meta {
-    margin: 0;
+.book-card-content p {
+    margin:
+        6px 0 0;
+
+    overflow: hidden;
 
     color: var(--text-muted);
 
     font-size: 12px;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
 }
 
 
-/* =========================================
-   LOADING / ERROR / EMPTY
-========================================= */
+.book-card-arrow {
+    color: var(--text-muted);
 
-.loading-state,
-.empty-state,
-.error-state {
-    min-height: 260px;
+    font-size: 26px;
+
+    transition:
+        transform 0.2s,
+        color 0.2s;
+}
+
+
+.book-card:hover .book-card-arrow {
+    color: var(--accent-light);
+
+    transform: translateX(3px);
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading-state {
+    min-height: 220px;
 
     display: flex;
 
@@ -503,9 +543,16 @@ p {
 
     justify-content: center;
 
-    text-align: center;
+    gap: 14px;
 
-    padding: 30px;
+    color: var(--text-muted);
+}
+
+
+.loading-state p {
+    margin: 0;
+
+    font-size: 14px;
 }
 
 
@@ -513,10 +560,11 @@ p {
     width: 28px;
     height: 28px;
 
-    border: 3px solid
-        rgba(255, 255, 255, 0.1);
+    border:
+        3px solid rgba(255,255,255,0.08);
 
-    border-top-color: var(--accent);
+    border-top-color:
+        var(--accent);
 
     border-radius: 50%;
 
@@ -532,110 +580,163 @@ p {
 }
 
 
-.loading-state p {
-    margin: 14px 0 0;
+/* =========================================================
+   ERROR / EMPTY
+========================================================= */
 
-    color: var(--text-muted);
+.error-state,
+.empty-state {
+    padding: 60px 20px;
 
-    font-size: 14px;
+    text-align: center;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    background:
+        rgba(255,255,255,0.025);
 }
 
 
-.empty-icon,
 .error-icon {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
+
+    margin: 0 auto 16px;
 
     display: grid;
 
     place-items: center;
 
-    border-radius: 18px;
+    border-radius: 50%;
 
-    background: var(--card);
+    background:
+        rgba(239, 68, 68, 0.12);
 
-    border: 1px solid var(--border);
+    color:
+        #f87171;
 
-    font-size: 26px;
-
-    margin-bottom: 16px;
+    font-weight: 800;
 }
 
 
-.error-icon {
-    color: var(--danger);
+.empty-icon {
+    margin-bottom: 12px;
 
-    font-weight: 900;
+    font-size: 42px;
 }
 
 
-.empty-state h2,
-.error-state h2 {
-    margin-bottom: 8px;
+.error-state h2,
+.empty-state h2 {
+    margin: 0;
 
     font-size: 20px;
 }
 
 
-.empty-state p,
-.error-state p {
-    max-width: 500px;
+.error-state p,
+.empty-state p {
+    max-width: 520px;
 
-    margin-bottom: 20px;
+    margin:
+        10px auto 22px;
 
     color: var(--text-muted);
 
-    font-size: 14px;
+    line-height: 1.6;
 }
 
 
-code {
-    padding: 3px 7px;
+.error-state code,
+.empty-state code {
+    padding:
+        3px 6px;
 
     border-radius: 6px;
 
-    background: rgba(255, 255, 255, 0.07);
+    background:
+        rgba(255,255,255,0.06);
 
-    color: var(--accent-light);
+    color: var(--text-soft);
 }
 
 
+/* =========================================================
+   BUTTON
+========================================================= */
+
 .primary-button {
+    padding:
+        11px 18px;
+
     border: 0;
 
-    padding: 11px 18px;
+    border-radius: 11px;
 
-    border-radius: 10px;
-
-    background: var(--accent);
+    background:
+        var(--accent);
 
     color: white;
 
     cursor: pointer;
 
-    font-weight: 700;
+    font-weight: 600;
+
+    transition:
+        transform 0.2s,
+        opacity 0.2s;
 }
 
 
 .primary-button:hover {
-    background: var(--accent-light);
+    transform: translateY(-1px);
+
+    opacity: 0.9;
 }
 
 
-/* =========================================
-   PLAYER
-========================================= */
+/* =========================================================
+   PLAYER VIEW
+========================================================= */
+
+.player-view {
+    animation:
+        fade-in 0.25s ease;
+}
+
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 
 .back-button {
-    margin-bottom: 25px;
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 24px;
 
     padding: 0;
 
     border: 0;
 
-    background: transparent;
+    background: none;
 
-    color: var(--text-soft);
+    color: var(--text-muted);
 
     cursor: pointer;
 
@@ -648,12 +749,16 @@ code {
 }
 
 
+/* =========================================================
+   PLAYER LAYOUT
+========================================================= */
+
 .player-layout {
     display: grid;
 
     grid-template-columns:
-        minmax(0, 1.3fr)
-        minmax(300px, 0.7fr);
+        minmax(0, 1.35fr)
+        minmax(320px, 0.85fr);
 
     gap: 20px;
 
@@ -661,34 +766,37 @@ code {
 }
 
 
-.player-card,
-.episodes-card {
-    border: 1px solid var(--border);
+/* =========================================================
+   PLAYER CARD
+========================================================= */
 
-    border-radius: 24px;
+.player-card {
+    padding: 28px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 22px;
 
     background:
         linear-gradient(
             145deg,
-            rgba(255, 255, 255, 0.035),
-            rgba(255, 255, 255, 0.012)
-        ),
-        var(--card);
+            rgba(255,255,255,0.055),
+            rgba(255,255,255,0.02)
+        );
 
-    box-shadow: var(--shadow);
-}
-
-
-.player-card {
-    padding: 28px;
+    box-shadow:
+        var(--shadow);
 }
 
 
 .player-cover {
     position: relative;
 
-    width: 100%;
-    aspect-ratio: 16 / 7;
+    width: 150px;
+    height: 150px;
+
+    margin-bottom: 26px;
 
     display: grid;
 
@@ -696,78 +804,80 @@ code {
 
     overflow: hidden;
 
-    border-radius: 18px;
+    border-radius: 24px;
 
     background:
-        radial-gradient(
-            circle at 50% 50%,
-            rgba(124, 92, 255, 0.25),
-            transparent 50%
-        ),
-        #10131b;
-
-    border: 1px solid var(--border);
-
-    margin-bottom: 25px;
-}
-
-
-.player-cover span {
-    position: relative;
-
-    z-index: 2;
-
-    font-size: clamp(45px, 8vw, 75px);
-
-    filter:
-        drop-shadow(
-            0 10px 25px
-            rgba(0, 0, 0, 0.4)
+        linear-gradient(
+            135deg,
+            #6d28d9,
+            #4c1d95
         );
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,0.3);
+
+    font-size: 58px;
 }
 
 
 .cover-decoration {
     position: absolute;
 
-    width: 240px;
-    height: 240px;
+    width: 180px;
+    height: 180px;
+
+    border:
+        1px solid rgba(255,255,255,0.12);
 
     border-radius: 50%;
 
-    border: 1px solid
-        rgba(124, 92, 255, 0.18);
+    transform:
+        rotate(25deg);
+}
 
-    box-shadow:
-        0 0 0 40px
-        rgba(124, 92, 255, 0.03),
-        0 0 0 80px
-        rgba(124, 92, 255, 0.02);
+
+.player-info {
+    margin-bottom: 28px;
 }
 
 
 .player-info h1 {
-    margin-bottom: 8px;
+    margin: 0;
 
-    font-size: clamp(23px, 4vw, 34px);
+    font-size:
+        clamp(24px, 4vw, 34px);
+
+    line-height: 1.15;
 
     letter-spacing: -0.03em;
-
-    word-break: break-word;
 }
 
 
 .player-info p {
-    margin: 0;
+    margin:
+        8px 0 0;
 
-    color: var(--text-soft);
+    color: var(--text-muted);
 
     font-size: 14px;
 }
 
 
+/* =========================================================
+   AUDIO
+========================================================= */
+
+#audioPlayer {
+    display: none;
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
 .progress-area {
-    margin-top: 30px;
+    margin-bottom: 22px;
 }
 
 
@@ -789,12 +899,16 @@ code {
 
     height: 5px;
 
+    margin: 0;
+
     appearance: none;
 
-    border-radius: 999px;
+    -webkit-appearance: none;
+
+    border-radius: 10px;
 
     background:
-        rgba(255, 255, 255, 0.1);
+        rgba(255,255,255,0.09);
 
     cursor: pointer;
 }
@@ -803,12 +917,17 @@ code {
 .progress-bar::-webkit-slider-thumb {
     appearance: none;
 
+    -webkit-appearance: none;
+
     width: 15px;
     height: 15px;
 
+    border: 0;
+
     border-radius: 50%;
 
-    background: var(--accent);
+    background:
+        var(--accent);
 
     cursor: pointer;
 }
@@ -822,75 +941,91 @@ code {
 
     border-radius: 50%;
 
-    background: var(--accent);
+    background:
+        var(--accent);
 
     cursor: pointer;
 }
 
+
+/* =========================================================
+   CONTROLS
+========================================================= */
 
 .player-controls {
     display: flex;
 
-    justify-content: center;
-
     align-items: center;
 
-    gap: 20px;
+    justify-content: center;
 
-    margin: 28px 0;
+    gap: 18px;
+
+    margin-bottom: 25px;
 }
 
 
 .control-button {
-    border: 0;
-
-    cursor: pointer;
+    width: 48px;
+    height: 48px;
 
     display: grid;
 
     place-items: center;
 
+    border: 1px solid var(--border);
+
     border-radius: 50%;
 
+    background:
+        rgba(255,255,255,0.045);
+
+    color: var(--text);
+
+    cursor: pointer;
+
     transition:
-        transform 0.15s,
-        background 0.15s;
+        transform 0.2s,
+        background 0.2s;
 }
 
 
 .control-button:hover {
     transform: scale(1.06);
-}
-
-
-.control-button.secondary {
-    width: 48px;
-    height: 48px;
 
     background:
-        rgba(255, 255, 255, 0.06);
-
-    border: 1px solid var(--border);
-
-    font-size: 19px;
+        rgba(255,255,255,0.08);
 }
 
 
 .control-button.play {
-    width: 66px;
-    height: 66px;
+    width: 62px;
+    height: 62px;
 
-    background: var(--accent);
+    background:
+        var(--accent);
 
-    color: white;
+    border-color:
+        var(--accent);
 
-    font-size: 24px;
-
-    box-shadow:
-        0 10px 30px
-        rgba(124, 92, 255, 0.3);
+    font-size: 21px;
 }
 
+
+.control-button.play:hover {
+    background:
+        var(--accent-light);
+}
+
+
+.control-button.secondary {
+    font-size: 17px;
+}
+
+
+/* =========================================================
+   EXTRA CONTROLS
+========================================================= */
 
 .extra-controls {
     display: flex;
@@ -901,11 +1036,7 @@ code {
 
     flex-wrap: wrap;
 
-    gap: 9px;
-
-    padding-top: 18px;
-
-    border-top: 1px solid var(--border);
+    gap: 8px;
 }
 
 
@@ -914,7 +1045,18 @@ code {
 
     align-items: center;
 
-    gap: 7px;
+    gap: 8px;
+
+    padding:
+        6px 8px 6px 12px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 10px;
+
+    background:
+        rgba(255,255,255,0.025);
 
     color: var(--text-muted);
 
@@ -922,38 +1064,82 @@ code {
 }
 
 
-.speed-control select,
-.small-button {
-    height: 34px;
+.speed-control select {
+    border: 0;
 
-    padding: 0 10px;
+    outline: none;
 
-    border: 1px solid var(--border);
-
-    border-radius: 9px;
-
-    background: rgba(255, 255, 255, 0.04);
+    background:
+        transparent;
 
     color: var(--text);
 
     cursor: pointer;
-
-    outline: none;
 }
 
 
-.small-button:hover,
-.speed-control select:hover {
-    background: rgba(255, 255, 255, 0.08);
+.speed-control option {
+    background:
+        var(--card);
+
+    color:
+        var(--text);
 }
 
 
-/* =========================================
-   EPISODES
-========================================= */
+.small-button {
+    padding:
+        8px 11px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 10px;
+
+    background:
+        rgba(255,255,255,0.025);
+
+    color: var(--text-soft);
+
+    cursor: pointer;
+
+    font-size: 12px;
+}
+
+
+.small-button:hover {
+    background:
+        rgba(255,255,255,0.07);
+
+    color: var(--text);
+}
+
+
+/* =========================================================
+   EPISODES CARD
+========================================================= */
 
 .episodes-card {
+    position: sticky;
+
+    top: 94px;
+
+    max-height:
+        calc(100vh - 118px);
+
+    display: flex;
+
+    flex-direction: column;
+
     overflow: hidden;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 22px;
+
+    background:
+        rgba(255,255,255,0.025);
 }
 
 
@@ -964,32 +1150,38 @@ code {
 
     justify-content: space-between;
 
-    padding: 24px;
+    padding: 22px;
 
-    border-bottom: 1px solid var(--border);
+    border-bottom:
+        1px solid var(--border);
 }
 
 
 .episodes-header h2 {
     margin: 0;
 
-    font-size: 20px;
+    font-size: 18px;
 }
 
 
 .episode-count {
     min-width: 32px;
+    height: 28px;
 
-    padding: 5px 9px;
+    display: grid;
 
-    border-radius: 8px;
+    place-items: center;
+
+    padding:
+        0 8px;
+
+    border-radius: 9px;
 
     background:
-        rgba(124, 92, 255, 0.12);
+        rgba(139,92,246,0.13);
 
-    color: var(--accent-light);
-
-    text-align: center;
+    color:
+        var(--accent-light);
 
     font-size: 12px;
 
@@ -997,9 +1189,40 @@ code {
 }
 
 
-.episode-list {
-    max-height: 620px;
+/* =========================================================
+   EPISODE LOADING
+========================================================= */
 
+.loading-small {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    padding: 24px;
+
+    color: var(--text-muted);
+
+    font-size: 13px;
+}
+
+
+.loading-small .spinner {
+    width: 18px;
+    height: 18px;
+
+    border-width: 2px;
+}
+
+
+/* =========================================================
+   EPISODE LIST
+========================================================= */
+
+.episode-list {
     overflow-y: auto;
 
     padding: 8px;
@@ -1015,93 +1238,91 @@ code {
 
     gap: 12px;
 
-    padding: 12px;
+    padding:
+        11px 12px;
 
-    border: 0;
+    border: 1px solid transparent;
 
     border-radius: 12px;
 
     background: transparent;
 
-    color: var(--text);
+    color: var(--text-soft);
 
     text-align: left;
 
     cursor: pointer;
 
     transition:
-        background 0.15s;
+        background 0.2s,
+        border-color 0.2s,
+        color 0.2s;
 }
 
 
 .episode-item:hover {
     background:
-        rgba(255, 255, 255, 0.05);
+        rgba(255,255,255,0.045);
+
+    color:
+        var(--text);
 }
 
 
 .episode-item.active {
     background:
-        rgba(124, 92, 255, 0.12);
+        rgba(139,92,246,0.12);
+
+    border-color:
+        rgba(139,92,246,0.22);
+
+    color:
+        var(--text);
 }
 
 
 .episode-number {
-    flex: 0 0 auto;
-
-    width: 38px;
-    height: 38px;
-
-    display: grid;
-
-    place-items: center;
-
-    border-radius: 10px;
-
-    background:
-        rgba(255, 255, 255, 0.05);
+    flex: 0 0 34px;
 
     color: var(--text-muted);
 
     font-size: 12px;
 
-    font-weight: 700;
+    text-align: center;
 }
 
 
-.episode-item.active .episode-number {
-    background: var(--accent);
-
-    color: white;
+.episode-item.active
+.episode-number {
+    color:
+        var(--accent-light);
 }
 
 
-.episode-details {
+.episode-content {
     min-width: 0;
 
     flex: 1;
 }
 
 
-.episode-name {
+.episode-title {
     display: block;
 
     overflow: hidden;
 
+    font-size: 13px;
+
+    line-height: 1.4;
+
     text-overflow: ellipsis;
 
     white-space: nowrap;
-
-    font-size: 13px;
-
-    font-weight: 600;
 }
 
 
-.episode-progress {
-    display: block;
-
-    margin-top: 4px;
+.episode-play {
+    flex: 0 0 auto;
 
     color: var(--text-muted);
 
@@ -1109,35 +1330,54 @@ code {
 }
 
 
-.loading-small {
-    min-height: 160px;
+.episode-item.active
+.episode-play {
+    color:
+        var(--accent-light);
+}
 
-    display: flex;
 
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 10px;
+.episode-empty {
+    padding: 30px 15px;
 
     color: var(--text-muted);
+
+    text-align: center;
 
     font-size: 13px;
 }
 
 
-/* =========================================
+/* =========================================================
    TOAST
-========================================= */
+========================================================= */
 
 .toast {
     position: fixed;
 
-    z-index: 100;
-
     left: 50%;
-
     bottom: 24px;
+
+    z-index: 200;
+
+    max-width:
+        calc(100% - 32px);
+
+    padding:
+        11px 16px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 12px;
+
+    background:
+        rgba(25, 29, 39, 0.95);
+
+    color: var(--text);
+
+    box-shadow:
+        var(--shadow);
 
     transform:
         translate(-50%, 20px);
@@ -1146,23 +1386,11 @@ code {
 
     pointer-events: none;
 
-    padding: 11px 16px;
-
-    border: 1px solid var(--border);
-
-    border-radius: 12px;
-
-    background: #1a1e28;
-
-    box-shadow: var(--shadow);
-
-    color: var(--text);
-
-    font-size: 13px;
-
     transition:
         opacity 0.2s,
         transform 0.2s;
+
+    font-size: 13px;
 }
 
 
@@ -1174,14 +1402,46 @@ code {
 }
 
 
-/* =========================================
-   MOBILE
-========================================= */
+/* =========================================================
+   SCROLLBAR
+========================================================= */
 
-@media (max-width: 800px) {
+* {
+    scrollbar-width: thin;
 
-    .container {
-        padding-top: 38px;
+    scrollbar-color:
+        rgba(255,255,255,0.15)
+        transparent;
+}
+
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+::-webkit-scrollbar-thumb {
+    background:
+        rgba(255,255,255,0.12);
+
+    border-radius: 10px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .folder-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
     }
 
 
@@ -1191,40 +1451,25 @@ code {
 
 
     .episodes-card {
-        order: 2;
-    }
+        position: static;
 
-
-    .episode-list {
-        max-height: 420px;
+        max-height: 520px;
     }
 
 }
 
 
-@media (max-width: 520px) {
+@media (max-width: 600px) {
 
     .topbar-inner,
     .container {
-        width: min(
-            100% - 20px,
-            1180px
-        );
-    }
-
-
-    .topbar-inner {
-        min-height: 64px;
+        width:
+            min(100% - 24px, 1180px);
     }
 
 
     .container {
-        padding-bottom: 50px;
-    }
-
-
-    .page-heading h1 {
-        font-size: 32px;
+        padding-top: 30px;
     }
 
 
@@ -1234,34 +1479,69 @@ code {
 
 
     .player-card {
-        padding: 16px;
+        padding: 20px;
+
+        border-radius: 18px;
     }
 
 
     .player-cover {
-        aspect-ratio: 16 / 9;
+        width: 120px;
+        height: 120px;
+
+        margin-bottom: 20px;
+
+        border-radius: 20px;
+
+        font-size: 46px;
     }
 
 
     .player-controls {
-        gap: 14px;
-    }
-
-
-    .control-button.secondary {
-        width: 44px;
-        height: 44px;
+        gap: 12px;
     }
 
 
     .control-button.play {
-        width: 60px;
-        height: 60px;
+        width: 58px;
+        height: 58px;
     }
 
 
-    .episodes-header {
-        padding: 18px;
+    .extra-controls {
+        gap: 7px;
+    }
+
+
+    .speed-control {
+        width: 100%;
+
+        justify-content: space-between;
+    }
+
+
+    .episodes-card {
+        border-radius: 18px;
+    }
+
+}
+
+
+@media (max-width: 380px) {
+
+    .brand small {
+        display: none;
+    }
+
+
+    .brand-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+
+    .page-heading h1 {
+        font-size: 27px;
     }
 
 }
