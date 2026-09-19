@@ -11,36 +11,40 @@ const state = {
 const els = {
     folderList: document.getElementById("folderList"),
     searchInput: document.getElementById("searchInput"),
+    clearSearch: document.getElementById("clearSearch"),
     libraryDescription: document.getElementById("libraryDescription"),
 
-    loadingState: document.getElementById("loadingState"),
-    errorState: document.getElementById("errorState"),
-    emptyState: document.getElementById("emptyState"),
+    loadingState: document.getElementById("libraryLoading"),
+    errorState: document.getElementById("libraryError"),
+    errorText: document.getElementById("libraryErrorText"),
+    emptyState: document.getElementById("libraryEmpty"),
 
     libraryView: document.getElementById("libraryView"),
     playerView: document.getElementById("playerView"),
 
-    backBtn: document.getElementById("backBtn"),
-    refreshBtn: document.getElementById("refreshBtn"),
+    backBtn: document.getElementById("backButton"),
+    refreshBtn: document.getElementById("refreshButton"),
+    retryBtn: document.getElementById("retryButton"),
 
     bookTitle: document.getElementById("bookTitle"),
     episodeTitle: document.getElementById("episodeTitle"),
     episodeCount: document.getElementById("episodeCount"),
     episodeList: document.getElementById("episodeList"),
+    episodeLoading: document.getElementById("episodeLoading"),
 
     audioPlayer: document.getElementById("audioPlayer"),
 
-    playBtn: document.getElementById("playBtn"),
-    prevBtn: document.getElementById("prevBtn"),
-    nextBtn: document.getElementById("nextBtn"),
+    playBtn: document.getElementById("playButton"),
+    prevBtn: document.getElementById("previousButton"),
+    nextBtn: document.getElementById("nextButton"),
 
     progressBar: document.getElementById("progressBar"),
     currentTime: document.getElementById("currentTime"),
     duration: document.getElementById("duration"),
 
     speedSelect: document.getElementById("speedSelect"),
-    rewindBtn: document.getElementById("rewindBtn"),
-    forwardBtn: document.getElementById("forwardBtn"),
+    rewindBtn: document.getElementById("rewindButton"),
+    forwardBtn: document.getElementById("forwardButton"),
 
     toast: document.getElementById("toast")
 };
@@ -61,7 +65,11 @@ document.addEventListener("DOMContentLoaded", () => {
 // ======================================================
 
 async function apiFetch(path) {
-    const response = await fetch(`${WORKER_URL}${path}`, {
+    const url = `${WORKER_URL}${path}`;
+
+    console.log("[API] GET:", url);
+
+    const response = await fetch(url, {
         method: "GET",
         headers: {
             Accept: "application/json"
@@ -69,14 +77,30 @@ async function apiFetch(path) {
         cache: "no-store"
     });
 
+    console.log(
+        "[API] Response:",
+        response.status,
+        response.statusText
+    );
+
     if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+        const text = await response.text().catch(() => "");
+
+        console.error("[API] Error:", text);
+
+        throw new Error(
+            `HTTP ${response.status} ${response.statusText}`
+        );
     }
 
     const data = await response.json();
 
+    console.log("[API] Data:", data);
+
     if (data.success === false) {
-        throw new Error(data.error || "API request failed");
+        throw new Error(
+            data.error || "API request failed"
+        );
     }
 
     return data;
@@ -95,18 +119,72 @@ async function loadBooks() {
     showLoading();
 
     try {
-        const data = await apiFetch("/api/books");
+        let books = [];
 
-        if (!Array.isArray(data.books)) {
-            throw new Error(
-                "API /api/books không trả về danh sách books."
+        // ------------------------------------------
+        // Lấy danh sách truyện
+        // ------------------------------------------
+
+        try {
+            const data = await apiFetch("/api/books");
+
+            if (Array.isArray(data.books)) {
+                books = data.books;
+            }
+        } catch (error) {
+            console.warn(
+                "Không lấy được /api/books:",
+                error
             );
         }
 
-        state.books = data.books.map(normalizeBook);
-        state.filteredBooks = [...state.books];
+
+        // ------------------------------------------
+        // FALLBACK: Audio1
+        // ------------------------------------------
+
+        if (books.length === 0) {
+            console.log(
+                "[API] Fallback → /api/books/Audio1"
+            );
+
+            const data =
+                await apiFetch("/api/books/Audio1");
+
+            if (data.book) {
+                books = [data.book];
+            }
+        }
+
+
+        // ------------------------------------------
+        // Kiểm tra
+        // ------------------------------------------
+
+        if (!Array.isArray(books)) {
+            throw new Error(
+                "API không trả về danh sách truyện."
+            );
+        }
+
+
+        // ------------------------------------------
+        // Normalize
+        // ------------------------------------------
+
+        state.books =
+            books.map(normalizeBook);
+
+        state.filteredBooks =
+            [...state.books];
+
+
+        // ------------------------------------------
+        // Render
+        // ------------------------------------------
 
         renderBooks();
+
 
         if (state.books.length === 0) {
             showEmpty("Chưa có truyện nào.");
@@ -115,10 +193,13 @@ async function loadBooks() {
         }
 
     } catch (error) {
-        console.error("Load books error:", error);
+        console.error(
+            "Load books error:",
+            error
+        );
 
         showError(
-            "Không thể tải danh sách truyện.",
+            "Không thể tải thư viện",
             error.message
         );
 
@@ -129,18 +210,27 @@ async function loadBooks() {
 
 
 // ======================================================
-// LOAD BOOK DETAIL
+// LOAD BOOK
 // ======================================================
 
 async function loadBook(book) {
     try {
         showToast("Đang tải danh sách tập...");
 
-        const bookId = book.slug || book.id;
+        const bookId =
+            book.slug ||
+            book.id;
 
-        const data = await apiFetch(
-            `/api/books/${encodeURIComponent(bookId)}`
-        );
+        if (!bookId) {
+            throw new Error(
+                "Không xác định được ID truyện."
+            );
+        }
+
+        const data =
+            await apiFetch(
+                `/api/books/${encodeURIComponent(bookId)}`
+            );
 
         if (!data.book) {
             throw new Error(
@@ -148,14 +238,19 @@ async function loadBook(book) {
             );
         }
 
-        state.currentBook = normalizeBook(data.book);
+        state.currentBook =
+            normalizeBook(data.book);
+
         state.currentEpisodeIndex = -1;
 
         renderPlayer();
         showPlayer();
 
     } catch (error) {
-        console.error("Load book error:", error);
+        console.error(
+            "Load book error:",
+            error
+        );
 
         showToast(
             `Không thể tải truyện: ${error.message}`
@@ -170,28 +265,53 @@ async function loadBook(book) {
 
 function normalizeBook(book) {
     return {
-        id: book.id || book.slug || "",
-        slug: book.slug || book.id || "",
+        id:
+            book.id ||
+            book.slug ||
+            "",
+
+        slug:
+            book.slug ||
+            book.id ||
+            "",
+
         name:
             book.name ||
             book.title ||
             book.slug ||
             "Không tên",
 
-        author: book.author || "",
-        description: book.description || "",
-        cover: book.cover || book.coverUrl || "",
-        path: book.path || "",
+        author:
+            book.author ||
+            "",
+
+        description:
+            book.description ||
+            "",
+
+        cover:
+            book.cover ||
+            book.coverUrl ||
+            "",
+
+        path:
+            book.path ||
+            "",
 
         episodeCount:
             Number(book.episodeCount) ||
-            (Array.isArray(book.episodes)
-                ? book.episodes.length
-                : 0),
+            (
+                Array.isArray(book.episodes)
+                    ? book.episodes.length
+                    : 0
+            ),
 
-        episodes: Array.isArray(book.episodes)
-            ? book.episodes.map(normalizeEpisode)
-            : []
+        episodes:
+            Array.isArray(book.episodes)
+                ? book.episodes.map(
+                    normalizeEpisode
+                )
+                : []
     };
 }
 
@@ -200,7 +320,10 @@ function normalizeBook(book) {
 // NORMALIZE EPISODE
 // ======================================================
 
-function normalizeEpisode(episode, index = 0) {
+function normalizeEpisode(
+    episode,
+    index = 0
+) {
     const key =
         episode.key ||
         episode.id ||
@@ -216,7 +339,10 @@ function normalizeEpisode(episode, index = 0) {
 
         title:
             episode.title ||
-            `Tập ${episode.number || index + 1}`,
+            `Tập ${
+                episode.number ||
+                index + 1
+            }`,
 
         filename:
             episode.filename ||
@@ -231,10 +357,12 @@ function normalizeEpisode(episode, index = 0) {
             index + 1,
 
         size:
-            Number(episode.size) || 0,
+            Number(episode.size) ||
+            0,
 
         uploaded:
-            episode.uploaded || "",
+            episode.uploaded ||
+            "",
 
         audioUrl:
             episode.audioUrl ||
@@ -248,12 +376,17 @@ function normalizeEpisode(episode, index = 0) {
 // ======================================================
 
 function buildAudioUrl(key) {
-    if (!key) return "";
+    if (!key) {
+        return "";
+    }
 
-    const encodedKey = key
-        .split("/")
-        .map(part => encodeURIComponent(part))
-        .join("/");
+    const encodedKey =
+        key
+            .split("/")
+            .map(part =>
+                encodeURIComponent(part)
+            )
+            .join("/");
 
     return `${WORKER_URL}/audio/${encodedKey}`;
 }
@@ -264,21 +397,39 @@ function buildAudioUrl(key) {
 // ======================================================
 
 function renderBooks() {
-    if (!els.folderList) return;
+    if (!els.folderList) {
+        console.error(
+            "Không tìm thấy #folderList."
+        );
+
+        return;
+    }
 
     els.folderList.innerHTML = "";
 
     if (state.filteredBooks.length === 0) {
-        showEmpty("Không tìm thấy truyện phù hợp.");
+        showEmpty(
+            "Không tìm thấy truyện phù hợp."
+        );
+
         return;
     }
 
     hideStates();
 
-    state.filteredBooks.forEach(book => {
-        const item = document.createElement("div");
+    // QUAN TRỌNG:
+    // HTML ban đầu có class="hidden"
+    els.folderList.classList.remove("hidden");
 
-        item.className = "folder-item";
+
+    state.filteredBooks.forEach(book => {
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "folder-item";
+
 
         item.innerHTML = `
             <div class="folder-icon">
@@ -286,6 +437,7 @@ function renderBooks() {
             </div>
 
             <div class="folder-info">
+
                 <div class="folder-name">
                     ${escapeHtml(book.name)}
                 </div>
@@ -303,11 +455,14 @@ function renderBooks() {
                     book.description
                         ? `
                         <div class="folder-description">
-                            ${escapeHtml(book.description)}
+                            ${escapeHtml(
+                                book.description
+                            )}
                         </div>
                         `
                         : ""
                 }
+
             </div>
 
             <div class="folder-arrow">
@@ -315,9 +470,12 @@ function renderBooks() {
             </div>
         `;
 
-        item.addEventListener("click", () => {
-            loadBook(book);
-        });
+
+        item.addEventListener(
+            "click",
+            () => loadBook(book)
+        );
+
 
         els.folderList.appendChild(item);
     });
@@ -329,79 +487,110 @@ function renderBooks() {
 // ======================================================
 
 function renderPlayer() {
-    const book = state.currentBook;
+    const book =
+        state.currentBook;
 
     if (!book) return;
 
+
     if (els.bookTitle) {
-        els.bookTitle.textContent = book.name;
+        els.bookTitle.textContent =
+            book.name;
     }
+
 
     if (els.episodeCount) {
         els.episodeCount.textContent =
-            `${book.episodes.length} tập`;
+            book.episodes.length;
     }
+
 
     if (els.episodeTitle) {
         els.episodeTitle.textContent =
             "Chọn một tập để bắt đầu";
     }
 
+
     renderEpisodeList();
 }
 
 
 // ======================================================
-// EPISODE LIST
+// EPISODES
 // ======================================================
 
 function renderEpisodeList() {
-    if (!els.episodeList) return;
+    if (!els.episodeList) {
+        return;
+    }
 
     els.episodeList.innerHTML = "";
 
     const episodes =
-        state.currentBook?.episodes || [];
+        state.currentBook?.episodes ||
+        [];
 
-    episodes.forEach((episode, index) => {
-        const item =
-            document.createElement("div");
 
-        item.className = "episode-item";
+    if (els.episodeLoading) {
+        els.episodeLoading.style.display =
+            "none";
+    }
 
-        if (
-            index ===
-            state.currentEpisodeIndex
-        ) {
-            item.classList.add("active");
+
+    episodes.forEach(
+        (episode, index) => {
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "episode-item";
+
+
+            if (
+                index ===
+                state.currentEpisodeIndex
+            ) {
+                item.classList.add("active");
+            }
+
+
+            item.innerHTML = `
+                <div class="episode-number">
+                    ${episode.number || index + 1}
+                </div>
+
+                <div class="episode-info">
+
+                    <div class="episode-title">
+                        ${escapeHtml(
+                            episode.title
+                        )}
+                    </div>
+
+                    <div class="episode-meta">
+                        ${formatFileSize(
+                            episode.size
+                        )}
+                    </div>
+
+                </div>
+
+                <div class="episode-play">
+                    ▶
+                </div>
+            `;
+
+
+            item.addEventListener(
+                "click",
+                () => playEpisode(index)
+            );
+
+
+            els.episodeList.appendChild(item);
         }
-
-        item.innerHTML = `
-            <div class="episode-number">
-                ${episode.number || index + 1}
-            </div>
-
-            <div class="episode-info">
-                <div class="episode-title">
-                    ${escapeHtml(episode.title)}
-                </div>
-
-                <div class="episode-meta">
-                    ${formatFileSize(episode.size)}
-                </div>
-            </div>
-
-            <div class="episode-play">
-                ▶
-            </div>
-        `;
-
-        item.addEventListener("click", () => {
-            playEpisode(index);
-        });
-
-        els.episodeList.appendChild(item);
-    });
+    );
 }
 
 
@@ -410,18 +599,22 @@ function renderEpisodeList() {
 // ======================================================
 
 function playEpisode(index) {
-    const book = state.currentBook;
+    const book =
+        state.currentBook;
 
     if (!book) return;
+
 
     const episode =
         book.episodes[index];
 
     if (!episode) return;
 
+
     const audioUrl =
         episode.audioUrl ||
         buildAudioUrl(episode.key);
+
 
     if (!audioUrl) {
         showToast(
@@ -431,18 +624,31 @@ function playEpisode(index) {
         return;
     }
 
-    state.currentEpisodeIndex = index;
 
-    els.audioPlayer.src = audioUrl;
+    console.log(
+        "[AUDIO] Playing:",
+        audioUrl
+    );
+
+
+    state.currentEpisodeIndex =
+        index;
+
+
+    els.audioPlayer.src =
+        audioUrl;
 
     els.audioPlayer.load();
+
 
     if (els.episodeTitle) {
         els.episodeTitle.textContent =
             episode.title;
     }
 
+
     renderEpisodeList();
+
 
     els.audioPlayer
         .play()
@@ -450,15 +656,16 @@ function playEpisode(index) {
             updatePlayButton();
         })
         .catch(error => {
-            console.error(
-                "Play error:",
+
+            console.warn(
+                "Autoplay bị chặn:",
                 error
             );
 
             updatePlayButton();
 
             showToast(
-                "Trình duyệt chặn tự động phát. Hãy bấm Play."
+                "Hãy bấm nút Play để phát."
             );
         });
 }
@@ -470,17 +677,23 @@ function playEpisode(index) {
 
 function playNext() {
     const episodes =
-        state.currentBook?.episodes || [];
+        state.currentBook?.episodes ||
+        [];
 
-    if (episodes.length === 0) return;
+    if (episodes.length === 0) {
+        return;
+    }
+
 
     const nextIndex =
         state.currentEpisodeIndex + 1;
+
 
     if (nextIndex >= episodes.length) {
         showToast("Đã hết truyện.");
         return;
     }
+
 
     playEpisode(nextIndex);
 }
@@ -488,16 +701,22 @@ function playNext() {
 
 function playPrevious() {
     const episodes =
-        state.currentBook?.episodes || [];
+        state.currentBook?.episodes ||
+        [];
 
-    if (episodes.length === 0) return;
+    if (episodes.length === 0) {
+        return;
+    }
+
 
     let previousIndex =
         state.currentEpisodeIndex - 1;
 
+
     if (previousIndex < 0) {
         previousIndex = 0;
     }
+
 
     playEpisode(previousIndex);
 }
@@ -513,12 +732,16 @@ function filterBooks(keyword) {
             .trim()
             .toLowerCase();
 
+
     if (!query) {
         state.filteredBooks =
             [...state.books];
+
     } else {
+
         state.filteredBooks =
             state.books.filter(book => {
+
                 const text = [
                     book.name,
                     book.author,
@@ -531,6 +754,7 @@ function filterBooks(keyword) {
                 return text.includes(query);
             });
     }
+
 
     renderBooks();
 }
@@ -546,8 +770,40 @@ function setupEvents() {
     els.searchInput?.addEventListener(
         "input",
         event => {
+
             filterBooks(
                 event.target.value
+            );
+
+            if (
+                els.clearSearch
+            ) {
+                els.clearSearch.classList.toggle(
+                    "hidden",
+                    !event.target.value
+                );
+            }
+        }
+    );
+
+
+    // Clear search
+    els.clearSearch?.addEventListener(
+        "click",
+        () => {
+
+            if (els.searchInput) {
+                els.searchInput.value = "";
+                els.searchInput.focus();
+            }
+
+            state.filteredBooks =
+                [...state.books];
+
+            renderBooks();
+
+            els.clearSearch.classList.add(
+                "hidden"
             );
         }
     );
@@ -555,6 +811,20 @@ function setupEvents() {
 
     // Refresh
     els.refreshBtn?.addEventListener(
+        "click",
+        () => {
+
+            if (state.isLoading) {
+                return;
+            }
+
+            loadBooks();
+        }
+    );
+
+
+    // Retry
+    els.retryBtn?.addEventListener(
         "click",
         () => {
             loadBooks();
@@ -575,7 +845,9 @@ function setupEvents() {
     els.playBtn?.addEventListener(
         "click",
         () => {
+
             if (!els.audioPlayer.src) {
+
                 if (
                     state.currentBook &&
                     state.currentBook.episodes.length
@@ -586,10 +858,24 @@ function setupEvents() {
                 return;
             }
 
-            if (els.audioPlayer.paused) {
-                els.audioPlayer.play();
+
+            if (
+                els.audioPlayer.paused
+            ) {
+
+                els.audioPlayer
+                    .play()
+                    .catch(error => {
+                        console.error(
+                            "Play error:",
+                            error
+                        );
+                    });
+
             } else {
+
                 els.audioPlayer.pause();
+
             }
         }
     );
@@ -609,23 +895,26 @@ function setupEvents() {
     );
 
 
-    // Rewind 10 seconds
+    // Rewind
     els.rewindBtn?.addEventListener(
         "click",
         () => {
+
             els.audioPlayer.currentTime =
                 Math.max(
                     0,
-                    els.audioPlayer.currentTime - 10
+                    els.audioPlayer.currentTime -
+                    10
                 );
         }
     );
 
 
-    // Forward 30 seconds
+    // Forward
     els.forwardBtn?.addEventListener(
         "click",
         () => {
+
             if (
                 !Number.isFinite(
                     els.audioPlayer.duration
@@ -634,10 +923,12 @@ function setupEvents() {
                 return;
             }
 
+
             els.audioPlayer.currentTime =
                 Math.min(
                     els.audioPlayer.duration,
-                    els.audioPlayer.currentTime + 30
+                    els.audioPlayer.currentTime +
+                    30
                 );
         }
     );
@@ -647,8 +938,11 @@ function setupEvents() {
     els.speedSelect?.addEventListener(
         "change",
         event => {
+
             els.audioPlayer.playbackRate =
-                Number(event.target.value);
+                Number(
+                    event.target.value
+                );
         }
     );
 
@@ -681,20 +975,39 @@ function setupEvents() {
     );
 
 
-    // End → next episode
+    // Can play
+    els.audioPlayer?.addEventListener(
+        "canplay",
+        () => {
+
+            console.log(
+                "[AUDIO] Can play:",
+                els.audioPlayer.currentSrc
+            );
+        }
+    );
+
+
+    // End
     els.audioPlayer?.addEventListener(
         "ended",
         playNext
     );
 
 
-    // Audio error
+    // Error
     els.audioPlayer?.addEventListener(
         "error",
-        event => {
+        () => {
+
             console.error(
-                "Audio error:",
-                event
+                "[AUDIO] Error:",
+                els.audioPlayer.error
+            );
+
+            console.error(
+                "[AUDIO] URL:",
+                els.audioPlayer.currentSrc
             );
 
             showToast(
@@ -708,8 +1021,10 @@ function setupEvents() {
     els.progressBar?.addEventListener(
         "input",
         event => {
+
             const duration =
                 els.audioPlayer.duration;
+
 
             if (
                 !Number.isFinite(duration) ||
@@ -718,28 +1033,40 @@ function setupEvents() {
                 return;
             }
 
+
             const percent =
-                Number(event.target.value);
+                Number(
+                    event.target.value
+                );
+
 
             els.audioPlayer.currentTime =
-                (percent / 100) * duration;
+                (percent / 100) *
+                duration;
         }
     );
 }
 
 
 // ======================================================
-// UI STATE
+// UI
 // ======================================================
 
 function showLibrary() {
+
     if (els.libraryView) {
-        els.libraryView.style.display = "";
+        els.libraryView.classList.remove(
+            "hidden"
+        );
     }
 
+
     if (els.playerView) {
-        els.playerView.style.display = "none";
+        els.playerView.classList.add(
+            "hidden"
+        );
     }
+
 
     if (els.audioPlayer) {
         els.audioPlayer.pause();
@@ -748,22 +1075,40 @@ function showLibrary() {
 
 
 function showPlayer() {
+
     if (els.libraryView) {
-        els.libraryView.style.display = "none";
+        els.libraryView.classList.add(
+            "hidden"
+        );
     }
 
+
     if (els.playerView) {
-        els.playerView.style.display = "";
+        els.playerView.classList.remove(
+            "hidden"
+        );
     }
 }
 
 
 function showLoading() {
+
     hideStates();
 
+
     if (els.loadingState) {
-        els.loadingState.style.display = "";
+        els.loadingState.classList.remove(
+            "hidden"
+        );
     }
+
+
+    if (els.folderList) {
+        els.folderList.classList.add(
+            "hidden"
+        );
+    }
+
 
     if (els.libraryDescription) {
         els.libraryDescription.textContent =
@@ -773,7 +1118,16 @@ function showLoading() {
 
 
 function showLibraryLoaded() {
+
     hideStates();
+
+
+    if (els.folderList) {
+        els.folderList.classList.remove(
+            "hidden"
+        );
+    }
+
 
     if (els.libraryDescription) {
         els.libraryDescription.textContent =
@@ -783,60 +1137,99 @@ function showLibraryLoaded() {
 
 
 function showEmpty(message) {
+
     hideStates();
 
-    if (els.emptyState) {
-        els.emptyState.style.display = "";
+
+    if (els.folderList) {
+        els.folderList.classList.add(
+            "hidden"
+        );
     }
+
+
+    if (els.emptyState) {
+        els.emptyState.classList.remove(
+            "hidden"
+        );
+    }
+
 
     const text =
         els.emptyState?.querySelector(
-            ".empty-text"
+            "p"
         );
 
+
     if (text) {
-        text.textContent = message;
+        text.textContent =
+            message;
     }
 }
 
 
-function showError(title, detail = "") {
+function showError(
+    title,
+    detail = ""
+) {
+
     hideStates();
 
-    if (els.errorState) {
-        els.errorState.style.display = "";
+
+    if (els.folderList) {
+        els.folderList.classList.add(
+            "hidden"
+        );
     }
+
+
+    if (els.errorState) {
+        els.errorState.classList.remove(
+            "hidden"
+        );
+    }
+
 
     const titleEl =
         els.errorState?.querySelector(
-            ".error-title"
+            "h2"
         );
 
-    const detailEl =
-        els.errorState?.querySelector(
-            ".error-detail"
-        );
 
     if (titleEl) {
-        titleEl.textContent = title;
+        titleEl.textContent =
+            title;
     }
 
-    if (detailEl) {
-        detailEl.textContent = detail;
+
+    if (els.errorText) {
+        els.errorText.textContent =
+            detail;
     }
 }
 
 
 function hideStates() {
-    [
-        els.loadingState,
-        els.errorState,
-        els.emptyState
-    ].forEach(element => {
-        if (element) {
-            element.style.display = "none";
-        }
-    });
+
+    if (els.loadingState) {
+        els.loadingState.classList.add(
+            "hidden"
+        );
+    }
+
+
+    if (els.errorState) {
+        els.errorState.classList.add(
+            "hidden"
+        );
+    }
+
+
+    if (els.emptyState) {
+        els.emptyState.classList.add(
+            "hidden"
+        );
+    }
 }
 
 
@@ -845,36 +1238,53 @@ function hideStates() {
 // ======================================================
 
 function updatePlayButton() {
-    if (!els.playBtn) return;
+
+    if (!els.playBtn) {
+        return;
+    }
+
 
     const playing =
         els.audioPlayer &&
         !els.audioPlayer.paused;
 
+
     els.playBtn.innerHTML =
-        playing ? "❚❚" : "▶";
+        playing
+            ? "❚❚"
+            : "▶";
 }
 
 
 function updateProgress() {
-    if (!els.audioPlayer) return;
+
+    if (!els.audioPlayer) {
+        return;
+    }
+
 
     const current =
-        els.audioPlayer.currentTime || 0;
+        els.audioPlayer.currentTime ||
+        0;
+
 
     const duration =
-        els.audioPlayer.duration || 0;
+        els.audioPlayer.duration ||
+        0;
+
 
     if (els.currentTime) {
         els.currentTime.textContent =
             formatTime(current);
     }
 
+
     if (
         els.progressBar &&
         Number.isFinite(duration) &&
         duration > 0
     ) {
+
         els.progressBar.value =
             (current / duration) * 100;
     }
@@ -882,15 +1292,21 @@ function updateProgress() {
 
 
 function updateDuration() {
-    if (!els.audioPlayer) return;
+
+    if (!els.audioPlayer) {
+        return;
+    }
+
 
     const duration =
         els.audioPlayer.duration;
+
 
     if (els.duration) {
         els.duration.textContent =
             formatTime(duration);
     }
+
 
     updateProgress();
 }
@@ -903,17 +1319,35 @@ function updateDuration() {
 let toastTimer = null;
 
 function showToast(message) {
-    if (!els.toast) return;
 
-    els.toast.textContent = message;
+    if (!els.toast) {
+        return;
+    }
 
-    els.toast.classList.add("show");
 
-    clearTimeout(toastTimer);
+    els.toast.textContent =
+        message;
 
-    toastTimer = setTimeout(() => {
-        els.toast.classList.remove("show");
-    }, 2500);
+
+    els.toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            () => {
+                els.toast.classList.remove(
+                    "show"
+                );
+            },
+            2500
+        );
 }
 
 
@@ -922,31 +1356,44 @@ function showToast(message) {
 // ======================================================
 
 function formatTime(seconds) {
+
     if (!Number.isFinite(seconds)) {
         return "00:00";
     }
 
+
     seconds =
-        Math.max(0, Math.floor(seconds));
+        Math.max(
+            0,
+            Math.floor(seconds)
+        );
+
 
     const hours =
-        Math.floor(seconds / 3600);
+        Math.floor(
+            seconds / 3600
+        );
+
 
     const minutes =
         Math.floor(
             (seconds % 3600) / 60
         );
 
+
     const secs =
         seconds % 60;
 
+
     if (hours > 0) {
+
         return [
             String(hours).padStart(2, "0"),
             String(minutes).padStart(2, "0"),
             String(secs).padStart(2, "0")
         ].join(":");
     }
+
 
     return [
         String(minutes).padStart(2, "0"),
@@ -956,9 +1403,14 @@ function formatTime(seconds) {
 
 
 function formatFileSize(bytes) {
-    if (!bytes || bytes <= 0) {
+
+    if (
+        !bytes ||
+        bytes <= 0
+    ) {
         return "";
     }
+
 
     const units = [
         "B",
@@ -967,8 +1419,10 @@ function formatFileSize(bytes) {
         "GB"
     ];
 
+
     let size = bytes;
     let index = 0;
+
 
     while (
         size >= 1024 &&
@@ -978,6 +1432,7 @@ function formatFileSize(bytes) {
         index++;
     }
 
+
     return `${size.toFixed(
         index === 0 ? 0 : 1
     )} ${units[index]}`;
@@ -985,15 +1440,25 @@ function formatFileSize(bytes) {
 
 
 function getFilename(key) {
-    if (!key) return "";
 
-    return key.split("/").pop();
+    if (!key) {
+        return "";
+    }
+
+    return key
+        .split("/")
+        .pop();
 }
 
 
-function extractEpisodeNumber(filename) {
+function extractEpisodeNumber(
+    filename
+) {
+
     const match =
-        String(filename).match(/\d+/);
+        String(filename).match(
+            /\d+/
+        );
 
     return match
         ? Number(match[0])
@@ -1002,10 +1467,28 @@ function extractEpisodeNumber(filename) {
 
 
 function escapeHtml(value) {
-    return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+
+    return String(
+        value ?? ""
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 }
